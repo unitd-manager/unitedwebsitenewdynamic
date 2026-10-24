@@ -159,6 +159,15 @@ export default function SearchEngineMarketing() {
   if (!pageData) {
     return <ServicePageStatus message="Search engine marketing content is not available." />;
   }
+  const heroTitle =
+    serviceText(pageData, "heroTitle") ||
+    serviceText(serviceQuery.data.content, "heroTitle");
+  const heroAccent =
+    serviceText(pageData, "heroAccent") ||
+    serviceText(serviceQuery.data.content, "heroAccent");
+  const heroDescription =
+    serviceText(pageData, "heroDescription") ||
+    serviceText(serviceQuery.data.content, "heroDescription");
   const iconByName: Record<string, LucideIcon> = {
     MapPin, Store, Megaphone, MousePointerClick, Trophy, Wallet, Zap,
     ClipboardCheck, Target, Search, TrendingUp, BarChart3,
@@ -185,13 +194,13 @@ export default function SearchEngineMarketing() {
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                {serviceText(pageData, "heroTitle")}{" "}
+                {heroTitle}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  {serviceText(pageData, "heroAccent")}
+                  {heroAccent}
                 </span>
               </h1>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                {serviceText(pageData, "heroDescription")}
+                {heroDescription}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 

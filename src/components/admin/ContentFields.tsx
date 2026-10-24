@@ -11,9 +11,8 @@ type ContentFieldsProps = {
   contentType: string;
 };
 
-const fieldClass =
-  "mt-2 w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-white outline-none focus:border-cyan-400";
-const cardClass = "rounded-xl border border-white/10 bg-black/10 p-4";
+const fieldClass = "admin-field-input";
+const cardClass = "admin-field-card";
 
 function labelFor(key: string) {
   return key
@@ -104,33 +103,33 @@ function FieldValue({
   if (Array.isArray(value)) {
     return (
       <fieldset className={cardClass}>
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <legend className="font-medium text-white">{labelFor(name)}</legend>
+        <div className="admin-field-array-heading">
+          <legend>{labelFor(name)}</legend>
           <button
             type="button"
             onClick={() => onChange(path, [...value, getDefaultArrayItem(path, contentType)])}
-            className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/30 px-3 py-2 text-xs font-medium text-cyan-200 hover:bg-cyan-400/10"
+            className="admin-field-add"
           >
             <Plus size={15} /> Add {labelFor(name).replace(/s$/, "")}
           </button>
         </div>
         {value.length === 0 && (
-          <p className="mb-3 text-xs text-white/45">No items added yet.</p>
+          <p className="admin-field-empty">No items added yet.</p>
         )}
-        <div className="space-y-3">
+        <div className="admin-field-group">
           {value.map((item, index) => {
             const itemPath = [...path, index];
             return (
               <div key={index} className={cardClass}>
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-white/50">
+                <div className="admin-field-item-heading">
+                  <p>
                     {labelFor(name).replace(/s$/, "")} {index + 1}
                   </p>
                   <button
                     type="button"
                     aria-label={`Remove ${labelFor(name).replace(/s$/, "")} ${index + 1}`}
                     onClick={() => onChange(path, value.filter((_, itemIndex) => itemIndex !== index))}
-                    className="rounded-md p-1.5 text-red-200 hover:bg-red-300/10"
+                    className="admin-field-remove"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -149,7 +148,7 @@ function FieldValue({
                       />
                     ))}
                     {Object.keys(item as Record<string, unknown>).length === 0 && (
-                      <p className="text-sm text-white/45">No fields available for this item.</p>
+                      <p className="admin-field-empty">No fields available for this item.</p>
                     )}
                   </div>
                 ) : (
@@ -172,8 +171,8 @@ function FieldValue({
 
   if (value && typeof value === "object") {
     return (
-      <fieldset className={`${cardClass} space-y-4`}>
-        <legend className="px-1 font-medium text-white">{labelFor(name)}</legend>
+      <fieldset className={`${cardClass} admin-field-group`}>
+        <legend>{labelFor(name)}</legend>
         {Object.entries(value as Record<string, unknown>).map(([childName, childValue]) => (
           <FieldValue
             key={childName}
@@ -191,12 +190,11 @@ function FieldValue({
 
   if (typeof value === "boolean") {
     return (
-      <label className="flex items-center gap-3 text-sm text-white/75">
+      <label className="admin-field-boolean">
         <input
           type="checkbox"
           checked={value}
           onChange={(event) => onChange(path, event.target.checked)}
-          className="h-4 w-4 accent-cyan-400"
         />
         {labelFor(name)}
       </label>
@@ -221,7 +219,7 @@ function FieldValue({
     }
   };
   return (
-    <label className="block text-sm text-white/70">
+    <label className="admin-field-label">
       {labelFor(name)}
       {textareaPaths.has(pathKey) || isLongText(name, stringValue) ? (
         <textarea
@@ -247,17 +245,16 @@ function FieldValue({
         />
       )}
       {isImageField && (
-        <span className="mt-2 block">
+        <span className="admin-field-upload">
           <input
             type="file"
             accept="image/avif,image/gif,image/jpeg,image/png,image/webp"
             onChange={handleImageUpload}
             disabled={uploading}
             aria-label={`Upload ${labelFor(name)}`}
-            className="block w-full text-xs text-white/60 file:mr-3 file:rounded-lg file:border-0 file:bg-cyan-400/15 file:px-3 file:py-2 file:font-medium file:text-cyan-100 hover:file:bg-cyan-400/25 disabled:opacity-60"
           />
-          {uploading && <span className="mt-1 block text-xs text-cyan-200">Uploading image...</span>}
-          {uploadError && <span role="alert" className="mt-1 block text-xs text-red-300">{uploadError}</span>}
+          {uploading && <span className="admin-field-empty">Uploading image...</span>}
+          {uploadError && <span role="alert" className="admin-field-error">{uploadError}</span>}
         </span>
       )}
     </label>
@@ -289,21 +286,21 @@ export default function ContentFields({
           onChange={update}
         />
       ))}
-      <div className="rounded-xl border border-dashed border-white/15 p-4">
-        <p className="mb-3 text-sm font-medium text-white/75">Add a content field</p>
-        <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="admin-add-field-panel">
+        <p>Add a content field</p>
+        <div className="admin-add-field-row">
           <input
             value={newFieldName}
             onChange={(event) => setNewFieldName(event.target.value)}
             placeholder="Field name"
             aria-label="New content field name"
-            className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-cyan-400"
+            className="admin-input"
           />
           <select
             value={newFieldType}
             onChange={(event) => setNewFieldType(event.target.value)}
             aria-label="New content field type"
-            className="rounded-lg border border-white/10 bg-[#0b1522] px-3 py-2 text-sm text-white outline-none focus:border-cyan-400"
+            className="admin-input"
           >
             <option value="text">Text</option>
             <option value="textarea">Textarea</option>
@@ -328,13 +325,13 @@ export default function ContentFields({
               setNewFieldName("");
               setNewFieldType("text");
             }}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-400 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="admin-button admin-button-primary"
           >
             <Plus size={15} /> Add field
           </button>
         </div>
         {Object.keys(value).length === 0 && (
-          <p className="mt-3 text-xs text-white/45">
+          <p className="admin-add-field-note">
             This item has no fields yet. Add text, textarea, or repeatable fields here.
           </p>
         )}
