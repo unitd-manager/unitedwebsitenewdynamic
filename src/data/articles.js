@@ -1,0 +1,556 @@
+// Shared article content for the blog detail pages.
+// Each entry's `slug` must match the slug used in BlogPage.jsx
+
+import technology1 from "../assets/technology1.webp";
+import technology2 from "../assets/technology2.webp";
+import technology3 from "../assets/technology3.webp";
+import technology4 from "../assets/technology4.webp";
+import technology5 from "../assets/technology5.webp";
+import technology6 from "../assets/technology6.webp";
+
+// Quantum Computing images
+import quantum1 from "../assets/quantum1.webp";
+import quantum2 from "../assets/quantum2.webp";
+import quantum3 from "../assets/quantum3.webp";
+
+// AI 2030 images
+import AI1 from "../assets/AI1.webp";
+import AI2 from "../assets/AI2.webp";
+import AI3 from "../assets/AI3.webp";
+
+// Ransomware / Cyber Security images
+import cyber1 from "../assets/cyber1.webp";
+import cyber2 from "../assets/cyber2.webp";
+import cyber3 from "../assets/cyber3.webp";
+
+// Software Development images
+import software1 from "../assets/software1.webp";
+import software2 from "../assets/software2.webp";
+import software3 from "../assets/software3.webp";
+
+// Cloud Computing images
+import cloud1 from "../assets/cloud1.webp";
+import cloud2 from "../assets/cloud2.webp";
+import cloud3 from "../assets/cloud3.webp";
+
+// AI Healthcare images
+import health1 from "../assets/health1.webp";
+import health2 from "../assets/health2.webp";
+import health3 from "../assets/health3.webp";
+
+
+export const articles = [
+  {
+    slug: "quantum-computing",
+    title: "The Quantum Computing Revolution",
+    category: "Technology",
+    date: "12 May 2026",
+    readTime: "9 min read",
+    img: technology1,
+    images: [quantum1, quantum2, quantum3],
+    description:
+      "Discover how quantum computing is transforming industries with next-generation processing power.",
+    author: {
+      name: "Maya Chen",
+      role: "Senior Research Editor",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "Quantum computing is no longer confined to the realm of theoretical physics or science fiction. It's rapidly emerging as a game-changer in the tech world, promising unprecedented computational power and capabilities. In this article, we'll take a detailed look at the rise of quantum computing and what it means for the future of technology.",
+      },
+      {
+        type: "heading",
+        text: "Understanding Quantum Computing",
+      },
+      {
+        type: "paragraph",
+        text: "Quantum computing leverages the principles of quantum mechanics to process information in a fundamentally different way than classical computers. At the core of quantum computing are quantum bits or qubits, which can exist in multiple states simultaneously thanks to phenomena like superposition and entanglement. This enables quantum computers to perform parallel computations on a massive scale, potentially solving complex problems exponentially faster than classical computers.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "heading",
+        text: "Applications and Potential",
+      },
+      {
+        type: "paragraph",
+        text: "The potential applications of quantum computing span a wide range of industries and fields. In finance, quantum computers could revolutionize portfolio optimization, risk analysis, and algorithmic trading by quickly analyzing vast amounts of data and identifying optimal strategies. In healthcare, quantum computing could accelerate drug discovery processes by simulating molecular interactions with unprecedented accuracy. Similarly, quantum computing holds promise in optimizing supply chains, weather forecasting, and cybersecurity.",
+      },
+      {
+        type: "heading",
+        text: "Challenges and Progress",
+      },
+      {
+        type: "paragraph",
+        text: "Despite its immense potential, quantum computing faces significant challenges. One major hurdle is qubit stability and error correction. Qubits are fragile and prone to decoherence, where they lose their quantum state due to interactions with the environment. Researchers are actively working on error correction techniques, quantum error correction codes, and developing more robust qubits. Companies like IBM, Google, and Rigetti are making strides in building scalable quantum architectures and achieving quantum supremacy milestones.",
+      },
+      { type: "image", index: 1 },
+      {
+        type: "heading",
+        text: "Implications for Society",
+      },
+      {
+        type: "paragraph",
+        text: "The rise of quantum computing will have profound implications for society. It could lead to breakthroughs in AI and machine learning, enabling more powerful and efficient algorithms. Quantum computing's impact on cryptography is particularly noteworthy, as it could render current encryption methods vulnerable to quantum attacks, necessitating the development of quantum-safe cryptography. Additionally, quantum computing raises ethical and societal concerns, such as data privacy, algorithmic biases, and job displacement in traditional industries.",
+      },
+      {
+        type: "heading",
+        text: "Looking Ahead",
+      },
+      {
+        type: "paragraph",
+        text: "As quantum computing continues to advance, we're on the brink of a new era in technology. While practical, commercial-scale quantum computers are still in development, their potential to reshape industries and solve complex problems is undeniable. Researchers, governments, and industry leaders must collaborate to address technical challenges, ethical considerations, and ensure responsible deployment of quantum technologies. Education and awareness about quantum computing will also be crucial in preparing society for the quantum revolution.",
+      },
+      { type: "image", index: 2 },
+      {
+        type: "heading",
+        text: "Conclusion",
+      },
+      {
+        type: "paragraph",
+        text: "In conclusion, the rise of quantum computing represents a transformative shift in how we process information and tackle complex problems. It's not just about faster computers but a paradigm shift that will impact various aspects of our lives. Navigating this quantum leap requires a multidisciplinary approach, encompassing scientific research, technological innovation, ethical considerations, and public engagement. Embracing the potential of quantum computing while addressing its challenges will pave the way for a future where computation knows no bounds.",
+      },
+    ],
+  },
+
+  {
+    slug: "ai-2030",
+    title: "Artificial Intelligence in 2030",
+    category: "Artificial Intelligence",
+    date: "18 May 2026",
+    readTime: "10 min read",
+    img: technology2,
+    images: [AI1, AI2, AI3],
+    description:
+      "Explore the future of AI and how it will reshape businesses, healthcare and automation.",
+    author: {
+      name: "Daniel Okafor",
+      role: "AI Strategy Lead",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "Artificial Intelligence (AI) has evolved rapidly in recent years, and its trajectory into the year 2030 promises transformative changes across industries and societies worldwide. In this article, we'll explore how AI is poised to reshape various sectors and the profound impact it will have on our daily lives.",
+      },
+      {
+        type: "heading",
+        text: "AI's Evolution and Current Landscape",
+      },
+      {
+        type: "paragraph",
+        text: "The journey of AI from its inception to its current state has been marked by significant advancements in machine learning, deep learning, natural language processing, and computer vision. AI systems have become adept at complex tasks such as image recognition, language translation, and decision-making, surpassing human capabilities in certain domains. Today, AI is integrated into numerous applications, from virtual assistants and recommendation systems to autonomous vehicles and healthcare diagnostics.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "heading",
+        text: "Transforming Industries",
+      },
+      {
+        type: "paragraph",
+        text: "By 2030, AI is expected to revolutionize industries across the board. In healthcare, AI-driven diagnostics and personalized medicine will enhance patient care and treatment outcomes. Manufacturing will see increased automation and optimization through AI-powered robotics and predictive maintenance. Financial services will leverage AI for fraud detection, risk assessment, and algorithmic trading. Agriculture, transportation, retail, and entertainment are among the many sectors poised for AI-driven innovations.",
+      },
+      {
+        type: "heading",
+        text: "Societal Impact",
+      },
+      {
+        type: "paragraph",
+        text: "The widespread adoption of AI will bring about profound societal changes. AI-driven automation may lead to job displacement in certain sectors, necessitating reskilling and upskilling initiatives. Ethical considerations surrounding AI, such as bias in algorithms, data privacy, and transparency, will become paramount. Collaborative efforts involving policymakers, industry stakeholders, and AI researchers will be essential in addressing these challenges while harnessing AI's benefits for societal good.",
+      },
+      { type: "image", index: 1 },
+      {
+        type: "heading",
+        text: "AI in Everyday Life",
+      },
+      {
+        type: "paragraph",
+        text: "In 2030, AI will be seamlessly integrated into our daily lives. Smart homes equipped with AI assistants will manage tasks, optimize energy usage, and enhance security. AI-powered education platforms will personalize learning experiences and provide lifelong learning opportunities. Autonomous vehicles will transform transportation, improving safety and efficiency. AI-driven virtual and augmented reality experiences will revolutionize entertainment, gaming, and immersive storytelling.",
+      },
+      {
+        type: "heading",
+        text: "Ethical and Regulatory Considerations",
+      },
+      {
+        type: "paragraph",
+        text: "As AI becomes more pervasive, ethical and regulatory frameworks will play a crucial role in shaping its development and deployment. Principles such as fairness, accountability, transparency, and human oversight will guide responsible AI practices. Regulatory bodies will need to adapt to the evolving AI landscape, balancing innovation with safeguards against potential risks and unintended consequences.",
+      },
+      { type: "image", index: 2 },
+      {
+        type: "heading",
+        text: "Looking Ahead",
+      },
+      {
+        type: "paragraph",
+        text: "The year 2030 represents a pivotal moment in AI's journey, where its transformative potential will be fully realized. Embracing AI responsibly and ethically will be key to unlocking its benefits while mitigating risks. Continued research, collaboration, and dialogue among stakeholders will shape AI's evolution towards a more inclusive, equitable, and human-centered future.",
+      },
+      {
+        type: "heading",
+        text: "Conclusion",
+      },
+      {
+        type: "paragraph",
+        text: "In conclusion, AI in 2030 heralds a new era of technological innovation and societal transformation. It's a journey of opportunities and challenges, where AI's impact will be felt across industries, communities, and individuals. By embracing AI's potential, fostering ethical practices, and nurturing a culture of continuous learning and adaptation, we can harness the power of AI to create a brighter and more sustainable future for all.",
+      },
+    ],
+  },
+
+  {
+    slug: "ransomware-protection",
+    title: "The Rise of Ransomware: How Businesses Can Protect Themselves",
+    category: "Cyber Security",
+    date: "22 May 2026",
+    readTime: "11 min read",
+    img: technology3,
+    images: [cyber1, cyber2, cyber3],
+    description:
+      "Learn the best cybersecurity strategies businesses can use to prevent ransomware attacks.",
+    author: {
+      name: "Priya Raman",
+      role: "Security Operations Lead",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "In today's interconnected world, where our lives and businesses rely heavily on digital systems and networks, cybersecurity has become a paramount concern. The rapid advancement of technology brings with it an evolving threat landscape, where cybercriminals constantly devise new ways to exploit vulnerabilities and gain unauthorized access to sensitive information. In this article, we will explore the importance of cybersecurity and provide practical tips to help you protect your digital assets.",
+      },
+      {
+        type: "heading",
+        text: "1. Understand the Threats",
+      },
+      {
+        type: "paragraph",
+        text: "To effectively combat cyber threats, it's crucial to understand the different types of risks you may encounter. These include malware attacks, phishing attempts, data breaches, ransomware, and social engineering. By familiarizing yourself with these threats, you can better recognize and mitigate potential risks.",
+      },
+      {
+        type: "heading",
+        text: "2. Implement Strong Password Practices",
+      },
+      {
+        type: "paragraph",
+        text: "Passwords act as the first line of defense for your digital accounts. Ensure you use strong, unique passwords for each account and consider using a password manager to securely store them. Enable multi-factor authentication whenever possible to add an extra layer of security.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "heading",
+        text: "3. Keep Software and Systems Updated",
+      },
+      {
+        type: "paragraph",
+        text: "Regularly update your operating system, software applications, and firmware to ensure you have the latest security patches. Cybercriminals often target known vulnerabilities, and updates help protect against these exploits. Enable automatic updates for convenience and enhanced security.",
+      },
+      {
+        type: "heading",
+        text: "4. Secure Your Home Network",
+      },
+      {
+        type: "paragraph",
+        text: "Secure your home Wi-Fi network by changing the default password, using strong encryption (WPA2 or WPA3), and regularly updating your router's firmware. Additionally, consider enabling a guest network to separate guest devices from your main network.",
+      },
+      {
+        type: "heading",
+        text: "5. Backup Your Data",
+      },
+      {
+        type: "paragraph",
+        text: "Regularly back up your important data to a secure location, such as an external hard drive or a cloud storage service. This ensures that even if your data is compromised or lost, you can restore it without significant disruption.",
+      },
+      { type: "image", index: 1 },
+      {
+        type: "heading",
+        text: "6. Educate Yourself and Your Team",
+      },
+      {
+        type: "paragraph",
+        text: "Cybersecurity is a shared responsibility. Stay updated on the latest threats, best practices, and security trends. Educate your employees or family members about cybersecurity risks and the importance of following security protocols to create a culture of security awareness.",
+      },
+      {
+        type: "heading",
+        text: "7. Use Antivirus and Firewall Protection",
+      },
+      {
+        type: "paragraph",
+        text: "Install reputable antivirus software and keep it up to date. Antivirus programs help detect and eliminate malware, while firewalls act as a barrier against unauthorized access to your devices or network.",
+      },
+      {
+        type: "heading",
+        text: "8. Limit Data Sharing and Practice Data Privacy",
+      },
+      {
+        type: "paragraph",
+        text: "Be mindful of the information you share online. Avoid oversharing personal details on social media platforms and only provide sensitive information on secure, trusted websites. Regularly review and adjust privacy settings on your social media accounts and other online platforms.",
+      },
+      { type: "image", index: 2 },
+      {
+        type: "heading",
+        text: "9. Establish an Incident Response Plan",
+      },
+      {
+        type: "paragraph",
+        text: "Prepare for potential security incidents by developing an incident response plan. This plan should outline steps to be taken in the event of a breach or security incident, including communication protocols, containment measures, and contact information for relevant parties.",
+      },
+      {
+        type: "heading",
+        text: "Conclusion",
+      },
+      {
+        type: "paragraph",
+        text: "Cybersecurity is a critical aspect of our digital lives. By understanding the threats, implementing strong security practices, and staying informed, you can protect your digital assets from malicious actors. Remember, cybersecurity is an ongoing effort that requires constant vigilance and adaptation to emerging threats. By prioritizing security and taking proactive measures, you can safeguard your digital presence and enjoy a safer online experience.",
+      },
+    ],
+  },
+
+  {
+    slug: "cybersecurity-development",
+    title: "Enhancing Cybersecurity in Software Development",
+    category: "Software Development",
+    date: "28 May 2026",
+    readTime: "9 min read",
+    img: technology4,
+    images: [software1, software2, software3],
+    description:
+      "Modern development practices now require advanced security integration from day one.",
+    author: {
+      name: "Tomás Reyes",
+      role: "Principal Engineer",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "Modern software development requires advanced security integration from day one. Rather than a single tool or checklist, a resilient security posture is built from several overlapping practices, each covering what the others might miss.",
+      },
+      {
+        type: "labeled",
+        label: "Data Encryption",
+        text: "Using encryption techniques to protect sensitive data both in transit and at rest. Encryption converts data into a secure form that can only be decrypted with the appropriate keys, making it unreadable to unauthorized users.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "labeled",
+        label: "Security Awareness and Training",
+        text: "Educating employees and users about cybersecurity best practices, such as recognizing phishing emails, using strong passwords, and being cautious with data sharing. Regular training and awareness programs help create a security-conscious culture.",
+      },
+      {
+        type: "labeled",
+        label: "Incident Response and Recovery",
+        text: "Establishing procedures and plans to respond promptly to security incidents, such as data breaches or system compromises. This includes mitigating the impact, containing the incident, investigating the cause, and restoring systems and data to normal operation.",
+      },
+      { type: "image", index: 1 },
+      {
+        type: "labeled",
+        label: "Regular Updates and Patch Management",
+        text: "Keeping systems, software, and firmware up to date with the latest security patches and updates to address known vulnerabilities and protect against emerging threats.",
+      },
+      {
+        type: "labeled",
+        label: "Continuous Monitoring and Threat Intelligence",
+        text: "Deploying security monitoring tools and systems to detect and respond to potential threats in real-time. Threat intelligence involves staying updated on the latest cybersecurity trends, vulnerabilities, and attack techniques to proactively mitigate risks.",
+      },
+      { type: "image", index: 2 },
+      {
+        type: "heading",
+        text: "An Ongoing Effort",
+      },
+      {
+        type: "paragraph",
+        text: "Cybersecurity is an ongoing effort that requires a proactive and multi-layered approach. Organizations and individuals need to stay vigilant, adapt to new threats, and continuously improve their security practices to effectively protect their digital assets from cyber attacks and maintain a secure computing environment.",
+      },
+    ],
+  },
+
+  {
+    slug: "cloud-computing",
+    title: "Cloud Computing and Its Impact on Software Development",
+    category: "Cloud Computing",
+    date: "02 June 2026",
+    readTime: "8 min read",
+    img: technology5,
+    images: [cloud1, cloud2, cloud3],
+    description:
+      "Cloud technologies continue to redefine scalability, deployment and software innovation.",
+    author: {
+      name: "Sofia Bianchi",
+      role: "Cloud Platform Architect",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "In this article, we delve into the world of cloud computing, uncovering its benefits and various applications across industries. Discover how cloud computing has revolutionized the way businesses store, process, and access data, leading to increased efficiency, scalability, and cost savings. We explore real-world examples of cloud computing in action, from cloud storage and infrastructure to software-as-a-service (SaaS) solutions, and take a deeper look at how it can transform your organization's operations, enhance collaboration, and drive innovation.",
+      },
+      {
+        type: "paragraph",
+        text: "Cloud computing refers to the delivery of computing resources, such as storage, servers, databases, software, and networking, over the internet. Instead of relying on local servers or personal devices for data storage and processing, cloud computing enables users to access and utilize these resources remotely through a network of servers located in data centers. In cloud computing, users can access and use a wide range of services and applications on-demand, paying only for the resources they consume. These resources are typically provided by cloud service providers, such as Amazon Web Services (AWS), Microsoft Azure, or Google Cloud Platform, who maintain and manage the underlying infrastructure.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "heading",
+        text: "The Key Characteristics of Cloud Computing",
+      },
+      {
+        type: "labeled",
+        label: "On-Demand Self-Service",
+        text: "Users can provision and access resources, such as virtual machines, storage, or applications, as needed without requiring human interaction with the service provider.",
+      },
+      {
+        type: "labeled",
+        label: "Broad Network Access",
+        text: "Cloud services can be accessed over the internet using various devices, such as laptops, tablets, or smartphones, from anywhere with an internet connection.",
+      },
+      {
+        type: "labeled",
+        label: "Resource Pooling",
+        text: "Cloud providers aggregate and share computing resources to serve multiple users simultaneously. The resources are dynamically assigned and reassigned based on demand, allowing for optimal resource utilization.",
+      },
+      {
+        type: "labeled",
+        label: "Rapid Elasticity",
+        text: "Cloud resources can be scaled up or down quickly and easily to accommodate fluctuating workload demands. This scalability allows users to pay for resources they actually use and avoid overprovisioning.",
+      },
+      {
+        type: "labeled",
+        label: "Measured Service",
+        text: "Cloud providers monitor resource usage and provide transparent reporting, enabling users to track and optimize their resource consumption. This pay-as-you-go model ensures cost efficiency and accountability.",
+      },
+      {
+        type: "heading",
+        text: "The Benefits of Cloud Computing",
+      },
+      {
+        type: "labeled",
+        label: "Flexibility and Scalability",
+        text: "Cloud resources can be easily scaled up or down based on business needs, allowing organizations to adapt quickly to changing requirements without upfront investments in infrastructure.",
+      },
+      {
+        type: "labeled",
+        label: "Cost Savings",
+        text: "With cloud computing, organizations can reduce capital expenses by eliminating the need for in-house servers and infrastructure. Instead, they pay for resources on a consumption basis, which can be more cost-effective in the long run.",
+      },
+      {
+        type: "labeled",
+        label: "Reliability and Availability",
+        text: "Cloud service providers typically offer high levels of reliability and availability through redundant systems and data backups. This ensures that applications and data are accessible even in the event of hardware failures or disasters.",
+      },
+      {
+        type: "labeled",
+        label: "Collaboration and Remote Access",
+        text: "Cloud computing enables seamless collaboration among geographically dispersed teams. Users can access and work on shared documents and applications in real-time, enhancing productivity and efficiency.",
+      },
+      {
+        type: "labeled",
+        label: "Data Security and Compliance",
+        text: "Cloud providers invest heavily in robust security measures and compliance certifications to protect user data. They often offer advanced security features, such as encryption, access controls, and regular security updates.",
+      },
+      { type: "image", index: 2 },
+      {
+        type: "heading",
+        text: "Considerations to Keep in Mind",
+      },
+      {
+        type: "paragraph",
+        text: "However, there are also some considerations to keep in mind when adopting cloud computing, such as data privacy, vendor lock-in, dependency on internet connectivity, and potential concerns about data sovereignty and regulatory compliance.",
+      },
+      {
+        type: "heading",
+        text: "Conclusion",
+      },
+      {
+        type: "paragraph",
+        text: "Overall, cloud computing offers organizations a flexible, cost-effective, and scalable approach to accessing and utilizing computing resources, enabling them to focus on their core business objectives while leaving the infrastructure management to expert service providers.",
+      },
+    ],
+  },
+
+  {
+    slug: "ai-healthcare",
+    title: "AI in Healthcare: Transforming the Medical Landscape",
+    category: "Healthcare",
+    date: "06 June 2026",
+    readTime: "10 min read",
+    img: technology6,
+    images: [health1, health2, health3],
+    description:
+      "AI-driven healthcare systems are improving diagnostics, patient care and medical efficiency.",
+    author: {
+      name: "Dr. Amina Yusuf",
+      role: "Health Tech Correspondent",
+    },
+    content: [
+      {
+        type: "paragraph",
+        text: "Artificial intelligence (AI) is revolutionizing healthcare, reshaping how we diagnose, treat, and manage diseases. From streamlining administrative tasks to assisting in complex medical diagnoses, AI is transforming the medical landscape in profound ways. In this comprehensive exploration, we'll delve into the myriad applications of AI in healthcare, examining how it's reshaping patient care, clinical research, and the future of medicine.",
+      },
+      {
+        type: "heading",
+        text: "AI-Powered Diagnostics",
+      },
+      {
+        type: "paragraph",
+        text: "One of the most promising applications of AI in healthcare is its role in medical diagnostics. AI algorithms, trained on vast datasets of medical images such as X-rays, MRIs, and CT scans, can analyze images with unprecedented speed and accuracy. By detecting subtle patterns and anomalies that may be missed by human clinicians, AI has the potential to revolutionize early disease detection and improve patient outcomes.",
+      },
+      {
+        type: "paragraph",
+        text: "Moreover, AI-driven diagnostic tools can help prioritize cases based on severity, allowing healthcare providers to allocate resources more efficiently. This not only reduces wait times for patients but also enables healthcare professionals to focus their attention on cases that require immediate intervention, ultimately saving lives.",
+      },
+      { type: "image", index: 0 },
+      {
+        type: "heading",
+        text: "Personalized Treatment Plans",
+      },
+      {
+        type: "paragraph",
+        text: "Another area where AI is making significant strides is in the development of personalized treatment plans. By analyzing patient data, including genetic information, medical history, and lifestyle factors, AI algorithms can identify optimal treatment regimens tailored to individual patients. This personalized approach to healthcare not only improves treatment efficacy but also minimizes adverse effects and reduces healthcare costs.",
+      },
+      {
+        type: "paragraph",
+        text: "Furthermore, AI-driven predictive analytics can forecast disease progression and identify patients at risk of developing complications. This early intervention can help healthcare providers intervene proactively, preventing the progression of diseases and improving patient outcomes.",
+      },
+      {
+        type: "heading",
+        text: "Administrative Efficiency",
+      },
+      {
+        type: "paragraph",
+        text: "In addition to clinical applications, AI is streamlining administrative processes within healthcare organizations. AI-powered chatbots and virtual assistants can handle routine inquiries, schedule appointments, and process paperwork, freeing up administrative staff to focus on more complex tasks. This not only improves operational efficiency but also enhances the overall patient experience by reducing wait times and minimizing administrative errors.",
+      },
+      {
+        type: "paragraph",
+        text: "Moreover, AI algorithms can analyze vast amounts of healthcare data to identify inefficiencies in healthcare delivery and optimize resource allocation. By leveraging data-driven insights, healthcare organizations can improve patient flow, reduce hospital readmissions, and enhance quality of care.",
+      },
+      {
+        type: "heading",
+        text: "Drug Discovery and Development",
+      },
+      {
+        type: "paragraph",
+        text: "AI is also revolutionizing the process of drug discovery and development, traditionally a time-consuming and costly endeavor. AI algorithms can analyze massive datasets of molecular structures, biological pathways, and clinical trial data to identify potential drug candidates with greater speed and accuracy than traditional methods. This accelerated drug discovery process holds the promise of bringing life-saving treatments to market more quickly, addressing unmet medical needs and improving patient outcomes.",
+      },
+      {
+        type: "paragraph",
+        text: "Furthermore, AI-driven predictive modeling can simulate drug interactions and predict drug efficacy, enabling researchers to prioritize promising candidates for further study. This data-driven approach to drug development not only reduces costs but also minimizes the risks associated with clinical trials, ultimately benefiting patients and healthcare providers alike.",
+      },
+      {
+        type: "heading",
+        text: "Ethical and Regulatory Considerations",
+      },
+      {
+        type: "paragraph",
+        text: "As AI continues to transform the healthcare landscape, it raises important ethical and regulatory considerations that cannot be ignored. Concerns about data privacy, patient consent, and algorithmic bias are increasingly being debated, prompting calls for robust ethical frameworks and regulatory oversight.",
+      },
+      {
+        type: "paragraph",
+        text: "Moreover, the integration of AI into clinical decision-making raises questions about liability and accountability in cases of algorithmic errors or malfunctions. Healthcare providers must navigate these complex legal and ethical issues to ensure that AI technologies are deployed responsibly and ethically, prioritizing patient safety and well-being above all else.",
+      },
+      {
+        type: "heading",
+        text: "Conclusion",
+      },
+      {
+        type: "paragraph",
+        text: "In conclusion, AI is poised to revolutionize the healthcare industry, from improving diagnostics and treatment to enhancing administrative efficiency and drug discovery. While the full potential of AI in healthcare has yet to be realized, the rapid pace of technological advancement holds great promise for the future of medicine. By harnessing the power of AI-driven insights and innovations, healthcare providers can deliver more personalized, efficient, and effective care, ultimately improving patient outcomes and transforming the medical landscape for generations to come.",
+      },
+    ],
+  },
+];
+
+export function getArticleBySlug(slug) {
+  return articles.find((article) => article.slug === slug);
+}

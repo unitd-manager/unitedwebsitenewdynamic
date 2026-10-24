@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Dark 3D inventory management dashboard</title>
+  <desc id="desc">A dark isometric warehouse inventory interface with boxes, stock charts, and cyan highlights.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#03141d"/>
+      <stop offset="0.55" stop-color="#061f2b"/>
+      <stop offset="1" stop-color="#01080d"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102e3d"/>
+      <stop offset="1" stop-color="#031019"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45f1ff"/>
+      <stop offset="1" stop-color="#087bff"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="960" cy="120" r="230" fill="#00d9ff" opacity=".08"/>
+  <circle cx="210" cy="560" r="260" fill="#0f7cff" opacity=".09"/>
+  <g transform="translate(175 115) skewY(-8)">
+    <rect x="0" y="0" width="850" height="430" rx="34" fill="url(#panel)" stroke="#26e7ff" stroke-opacity=".18"/>
+    <rect x="46" y="48" width="300" height="54" rx="16" fill="#071a25" stroke="#43e9ff" stroke-opacity=".2"/>
+    <rect x="390" y="48" width="168" height="54" rx="16" fill="#092635"/>
+    <rect x="590" y="48" width="210" height="54" rx="16" fill="#092635"/>
+    <g filter="url(#glow)">
+      <path d="M76 253h124v96H76z" fill="#123243"/>
+      <path d="M76 253l62-40 124 0-62 40z" fill="#1c5669"/>
+      <path d="M200 253l62-40v96l-62 40z" fill="#0a7288"/>
+      <path d="M108 290h58v18h-58z" fill="url(#cyan)"/>
+      <path d="M292 233h124v116H292z" fill="#102d3d"/>
+      <path d="M292 233l62-40 124 0-62 40z" fill="#1b5368"/>
+      <path d="M416 233l62-40v116l-62 40z" fill="#0b6983"/>
+      <path d="M326 282h58v18h-58z" fill="url(#cyan)"/>
+    </g>
+    <g transform="translate(530 160)">
+      <rect width="250" height="164" rx="26" fill="#071720" stroke="#31e4ff" stroke-opacity=".2"/>
+      <path d="M42 122V58M92 122V82M142 122V40M192 122V70" stroke="url(#cyan)" stroke-width="18" stroke-linecap="round"/>
+      <path d="M36 128h184" stroke="#6ff5ff" stroke-opacity=".25" stroke-width="6"/>
+    </g>
+    <g fill="#58efff" opacity=".75">
+      <circle cx="95" cy="75" r="8"/><circle cx="122" cy="75" r="8"/><circle cx="149" cy="75" r="8"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Dark 3D supplier performance monitoring</title>
+  <desc id="desc">A dark performance monitoring interface with supplier score gauges, delivery metrics, and quality indicators.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#021019"/><stop offset=".55" stop-color="#072737"/><stop offset="1" stop-color="#01070c"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#11374b"/><stop offset="1" stop-color="#04131c"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#66f8ff"/><stop offset="1" stop-color="#087cff"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g transform="translate(165 105)">
+    <rect width="870" height="445" rx="38" fill="url(#panel)" stroke="#35eaff" stroke-opacity=".2"/>
+    <g transform="translate(70 70)">
+      <circle cx="185" cy="185" r="142" fill="#061720" stroke="#12384b" stroke-width="28"/>
+      <path d="M62 256a142 142 0 1 1 246-1" fill="none" stroke="url(#accent)" stroke-width="28" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M185 185l82-82" stroke="#83f9ff" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="185" cy="185" r="18" fill="url(#accent)"/>
+      <rect x="128" y="244" width="114" height="22" rx="11" fill="#8ff8ff" opacity=".35"/>
+    </g>
+    <g transform="translate(430 78)">
+      <rect width="350" height="70" rx="22" fill="#061720"/>
+      <rect x="30" y="27" width="180" height="16" rx="8" fill="#8ff8ff" opacity=".34"/>
+      <rect x="248" y="19" width="68" height="32" rx="16" fill="url(#accent)"/>
+      <rect y="104" width="350" height="70" rx="22" fill="#061720"/>
+      <rect x="30" y="131" width="220" height="16" rx="8" fill="#8ff8ff" opacity=".34"/>
+      <rect x="248" y="123" width="68" height="32" rx="16" fill="#12465d"/>
+      <rect y="208" width="350" height="70" rx="22" fill="#061720"/>
+      <rect x="30" y="235" width="150" height="16" rx="8" fill="#8ff8ff" opacity=".34"/>
+      <rect x="248" y="227" width="68" height="32" rx="16" fill="#12465d"/>
+    </g>
+  </g>
+</svg>

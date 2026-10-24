@@ -1,0 +1,136 @@
+:root {
+  --radius: 0.75rem;
+  --background: 224 40% 6%;
+  --foreground: 210 40% 96%;
+  --card: 224 35% 10%;
+  --card-foreground: 210 40% 96%;
+  --popover: 224 35% 10%;
+  --popover-foreground: 210 40% 96%;
+  --primary: 200 100% 50%;
+  --primary-foreground: 224 40% 6%;
+  --secondary: 224 35% 10%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 224 25% 14%;
+  --muted-foreground: 215 20% 60%;
+  --accent: 330 80% 60%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 224 20% 18%;
+  --input: 224 20% 18%;
+  --ring: 200 100% 50%;
+
+  --brand: 200 100% 50%;
+  --brand-foreground: 224 40% 6%;
+  --brand-soft: 197 100% 67%;
+
+  --gradient-hero: linear-gradient(135deg, rgb(5, 8, 18) 0%, rgb(8, 14, 34) 40%, rgb(11, 23, 46) 100%);
+  --gradient-brand: linear-gradient(120deg, rgb(48, 191, 255), rgb(94, 189, 255));
+  --shadow-elegant: 0 20px 60px -20px rgba(0, 0, 0, 0.55);
+  --shadow-card: 0 8px 30px -10px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 60px rgba(56, 189, 248, 0.18);
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.seo-page {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.seo-page img {
+  display: block;
+}
+
+.seo-page a {
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+.hero-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.glass-card {
+  background: rgba(22, 30, 48, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-elegant {
+  box-shadow: var(--shadow-elegant);
+}
+
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.text-brand {
+  color: hsl(var(--brand));
+}
+
+.text-brand-soft {
+  color: hsl(var(--brand-soft));
+}
+
+.bg-brand {
+  background-color: hsl(var(--brand));
+}
+
+.bg-brand\/10 {
+  background-color: hsla(200, 100%, 50%, 0.1);
+}
+
+.bg-brand\/15 {
+  background-color: hsla(200, 100%, 50%, 0.15);
+}
+
+.border-brand\/30 {
+  border-color: hsla(200, 100%, 50%, 0.3);
+}
+
+.shadow-brand\/10 {
+  box-shadow: 0 18px 50px rgba(56, 189, 248, 0.1);
+}
+
+.section-surface {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-card);
+}
+
+.accent-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.accent-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--brand)), #a78bfa);
+  border-radius: 999px;
+}
