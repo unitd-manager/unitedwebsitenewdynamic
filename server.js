@@ -368,8 +368,8 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
-  logger: true,
-  debug: true,
+  logger: false,
+  debug: false,
 });
 
 // Test SMTP connection on startup

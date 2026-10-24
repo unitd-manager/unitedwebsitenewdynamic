@@ -1,14 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import image from "../assets/Importancia de la derecho a la protección de los datos.webp";
-import image1 from "../assets/IoT Developments Shaping the Future of Connected Technology.webp";
-import image2 from "../assets/Techsodise builds digital growth systems_.webp";
-import image3 from "../assets/cost.webp";
-import image4 from "../assets/data.webp";
-import image5 from "../assets/global.webp";
-import image6 from "../assets/cloud1.webp";
-import image8 from "../assets/email.webp";
-import image7 from "../assets/Affordable Dedicated Servers in Phoenix, USA – Atalnetworks.webp";
 import {
   Cloud,
   Server,
@@ -23,6 +14,13 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+} from "@/hooks/useServicePage";
 
 /* ---------- shared bits (kept identical to SocialMediaMarketing.tsx) ---------- */
 
@@ -254,82 +252,24 @@ const FeatureCarousel = ({ features }) => {
   );
 };
 
-/* ---------- content data (verbatim from source page) ---------- */
-
-const introParagraph =
-  "Cloud hosting involves hosting applications across multiple servers to distribute the workload and ensure high uptime. In traditional hosting, applications were typically hosted on a single server, which could lead to significant downtime and delays in making the server operational again in case of failures. However, cloud hosting offers several advantages, including:";
-
-const overviewFeatures = [
-  {
-    image: image1,
-    title: "High Reliability",
-    text: "By distributing the application across multiple servers, cloud hosting reduces the risk of complete downtime. If one server fails, the workload is automatically shifted to other servers, ensuring continuous availability.",
-  },
-  {
-    image: image2,
-    title: "Scalability",
-    text: "Cloud hosting allows applications to easily scale up or down based on demand. As traffic fluctuates, resources can be dynamically allocated to meet the requirements, ensuring optimal performance at all times.",
-  },
-  {
-    image: image3,
-    title: "Cost-Efficiency",
-    text: "With cloud hosting, you only pay for the resources you use. This pay-as-you-go model helps in cost optimization, as opposed to traditional hosting, where you often pay for fixed resources regardless of usage.",
-  },
-  {
-    image: image4,
-    title: "Data Redundancy",
-    text: "Cloud hosting providers implement robust data backup and replication strategies, ensuring that your data is securely stored across multiple locations. This redundancy minimizes the risk of data loss due to hardware failures.",
-  },
-  {
-    image: image5,
-    title: "Global Reach",
-    text: "Cloud hosting allows applications to be deployed in data centers worldwide. This enables faster access for users across different geographical locations, improving user experience.",
-  },
-  {
-    image: image6,
-    title: "Flexibility",
-    text: "Cloud hosting platforms offer a wide range of services and tools, allowing developers to customize and configure their application environments according to specific needs.",
-  },
-];
-
-const dedicatedAdvantages = [
-  {
-    title: "Abundant Resources",
-    text: "Get full access to ample CPU, RAM, and storage dedicated entirely to your applications, with no sharing or contention from other users.",
-  },
-  {
-    title: "High Security",
-    text: "Operate in an isolated environment with complete control over firewalls, security patches, and access permissions.",
-  },
-  {
-    title: "Reliable Performance",
-    text: "Enjoy consistent uptime and speed, since your server's resources are never shared with other customers.",
-  },
-  {
-    title: "Cost-Efficiency",
-    text: "Get predictable, all-inclusive pricing for a powerful hosting solution without the overhead of managing on-premise hardware.",
-  },
-];
-
-const emailValueAdds = [
-  {
-    title: "WordPress Hosting",
-    text: "Fully managed WordPress environments optimized for speed, security, and easy content updates.",
-  },
-  {
-    title: "Gsuite Integration",
-    text: "Seamlessly connect your domain with Google Workspace for professional email, calendars, and collaboration tools.",
-  },
-  {
-    title: "Email Migration From Outlook To Gsuite",
-    text: "A smooth, guided migration of your mailboxes and data from Outlook to Gsuite with minimal downtime.",
-  },
-];
-
 /* ---------- page ---------- */
 
 export default function CloudHosting() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const serviceQuery = useServicePage("cloud-hosting");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading cloud hosting content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`Cloud hosting content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="Cloud hosting content is not available." />;
+  }
+  const overviewFeatures = serviceArray<{ image: string; title: string; text: string }>(pageData, "overviewFeatures");
+  const dedicatedAdvantages = serviceArray<{ title: string; text: string }>(pageData, "dedicatedAdvantages");
+  const emailValueAdds = serviceArray<{ title: string; text: string }>(pageData, "emailValueAdds");
   return (
     <div className="min-h-screen bg-[#05060f] text-white antialiased selection:bg-blue-500/30">
       {/* background ambience */}
@@ -346,23 +286,21 @@ export default function CloudHosting() {
         <header className="mx-auto max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
-              <Eyebrow>Service Details</Eyebrow>
+              <Eyebrow>{serviceText(pageData, "eyebrow")}</Eyebrow>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Cloud{" "}
+                {serviceText(pageData, "heroTitle")}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  Hosting
+                  {serviceText(pageData, "heroAccent")}
                 </span>
               </h1>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                Hosting applications across multiple servers to distribute
-                the workload and ensure high uptime — reliable, scalable,
-                and built to grow with you.
+                {serviceText(pageData, "heroDescription")}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 
                 onClick={() => navigate("/enquiryNow")}
                 className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-                  Enquiry Now
+                  {serviceText(pageData, "ctaLabel")}
                 </button>
                 
               </div>
@@ -371,8 +309,8 @@ export default function CloudHosting() {
             <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image}
-                alt="social media marketing"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -381,10 +319,10 @@ export default function CloudHosting() {
 
         {/* ---------------- WHAT IS CLOUD HOSTING (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
-          <SectionHeading eyebrow="Overview" title="What Is Cloud Hosting" />
+          <SectionHeading eyebrow={serviceText(pageData, "overviewEyebrow")} title={serviceText(pageData, "overviewTitle")} />
           <Panel className="mb-8">
             <p className="text-slate-300 leading-relaxed">
-              {introParagraph}
+              {serviceText(pageData, "introParagraph")}
             </p>
           </Panel>
           <FeatureCarousel features={overviewFeatures} />
@@ -394,45 +332,28 @@ export default function CloudHosting() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="Cloud Hosting VPS And Dedicated"
-              title="Dedicated Server"
+              eyebrow={serviceText(pageData, "dedicatedEyebrow")}
+              title={serviceText(pageData, "dedicatedTitle")}
             />
             <div className="grid items-center gap-12 md:grid-cols-2">
               <div className="text-left">
                 <p className="text-slate-300 leading-relaxed">
-                  A dedicated server is an exclusive hosting solution
-                  provided to a single customer, granting them full control
-                  over its features and resources. Unlike shared hosting,
-                  where multiple users share the same server, a dedicated
-                  server offers unparalleled performance and security as it
-                  is entirely dedicated to one customer's needs. This level
-                  of control allows the customer to customize the server's
-                  configurations, choose specific software, and optimize its
-                  performance to meet their unique requirements. With a
-                  dedicated server, the customer has the flexibility to
-                  manage the server environment efficiently, ensuring a
-                  reliable and powerful hosting solution tailored to their
-                  specific needs.
+                  {serviceText(pageData, "dedicatedDescription")}
                 </p>
 
                 <h4 className="mt-6 font-semibold text-white">
-                  Who should use dedicated server hosting?
+                  {serviceText(pageData, "dedicatedQuestion")}
                 </h4>
                 <p className="mt-3 text-sm text-slate-400 leading-relaxed">
-                  Dedicated server hosting is best suited for users who run
-                  multiple high-traffic applications and require enhanced
-                  security, reliability, and complete control over their
-                  server environment. It is ideal for resource-intensive
-                  tasks, e-commerce websites, and businesses that need
-                  optimal performance and customized configurations.
+                  {serviceText(pageData, "dedicatedAnswer")}
                 </p>
               </div>
 
             <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image7}
-                alt="social media marketing"
+                src={serviceText(pageData, "dedicatedImage")}
+                alt={serviceText(pageData, "dedicatedImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -440,7 +361,7 @@ export default function CloudHosting() {
             </div>
 
             <div className="mt-16">
-              <SectionHeading eyebrow="Why It Works" title="Advantages" />
+              <SectionHeading eyebrow={serviceText(pageData, "advantagesEyebrow")} title={serviceText(pageData, "advantagesTitle")} />
               <Timeline items={dedicatedAdvantages} />
             </div>
           </div>
@@ -449,23 +370,16 @@ export default function CloudHosting() {
         {/* ---------------- EMAIL HOSTING SERVER (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 py-24">
           <SectionHeading
-            eyebrow="Cloud Hosting Email And WordPress"
-            title="Email Hosting Server"
+            eyebrow={serviceText(pageData, "emailEyebrow")}
+            title={serviceText(pageData, "emailTitle")}
           />
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div className="text-left">
               <p className="text-slate-300 leading-relaxed">
-                Emails contain sensitive information, making it crucial to
-                have dedicated servers to ensure secure and reliable email
-                communication. At our hosting service, we offer a variety of
-                email servers to cater to the diverse needs of our users.
+                {serviceText(pageData, "emailDescription")}
               </p>
               <p className="mt-4 text-sm text-slate-400 leading-relaxed">
-                Our email hosting packages start with a minimum of 5 email
-                accounts, providing an ideal solution for small businesses
-                and individuals. Moreover, the storage capacity is scalable,
-                enabling users to easily increase their storage as per their
-                specific requirements.
+                {serviceText(pageData, "emailDescriptionSecondary")}
               </p>
             </div>
 
@@ -473,8 +387,8 @@ export default function CloudHosting() {
            <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image8}
-                alt="social media marketing"
+                src={serviceText(pageData, "emailImage")}
+                alt={serviceText(pageData, "emailImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -483,9 +397,9 @@ export default function CloudHosting() {
 
           <div className="mt-16">
             <SectionHeading
-              eyebrow="What's Included"
-              title="Value-Added Services"
-              sub="In addition to our standard email hosting services, we also offer:"
+              eyebrow={serviceText(pageData, "valueEyebrow")}
+              title={serviceText(pageData, "valueTitle")}
+              sub={serviceText(pageData, "valueDescription")}
             />
             <Timeline items={emailValueAdds} />
           </div>
@@ -494,16 +408,15 @@ export default function CloudHosting() {
         {/* ---------------- CTA ---------------- */}
         <section className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-            Ready To Move To The Cloud?
+            {serviceText(pageData, "ctaTitle")}
           </h2>
           <p className="mt-4 text-slate-400">
-            Let's find the right hosting setup — cloud, dedicated, or
-            email — for your business.
+            {serviceText(pageData, "ctaDescription")}
           </p>
           <button 
           onClick={() => navigate("/enquiryNow")}
           className="mt-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-            Enquiry Now
+            {serviceText(pageData, "ctaLabel")}
           </button>
         </section>
       </div>

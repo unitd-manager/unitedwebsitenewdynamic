@@ -1,17 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 // Update these paths to point to your own image assets
-import image18 from "../assets/download.webp";
-import image19 from "../assets/Productivity Workspace UI.webp";
-import image20 from "../assets/Cyber security dashboard.webp";
-import image1 from "../assets/website.webp";
-import image2 from "../assets/web1 (1).webp";
-import image3 from "../assets/web2.webp";
-
 import { ExternalLink, Image as ImageIcon } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
 import FooterSection from "@/components/FooterSection";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+} from "@/hooks/useServicePage";
 
 /* ---------- shared bits ---------- */
 
@@ -21,7 +21,7 @@ const Eyebrow = ({ children }) => (
   </span>
 );
 
-const SectionHeading = ({ eyebrow, title, sub, align = "center" }) => (
+const SectionHeading = ({ eyebrow, title, sub = undefined, align = "center" }) => (
   <div
     className={`max-w-2xl ${
       align === "center" ? "mx-auto text-center" : "text-left"
@@ -43,51 +43,30 @@ const Panel = ({ children, className = "" }) => (
   </div>
 );
 
-/* ---------- content data (verbatim) ---------- */
-
-const introParagraphs = [
-  "In today's digital world, having a strong online presence is essential. Therefore, placing significant emphasis on web design and web development is crucial before implementation. An effective web design should be simple, with a theme that clearly conveys the intended message to the users.",
-  "With a decade of experience, we have successfully created numerous websites, spanning from simple informational sites to sophisticated e-commerce platforms. Please take a moment to explore our portfolio below, which showcases our expertise and gives you an idea of our capabilities.",
-];
-
-const factorsIntro =
-  "Before diving into web design and development, it's crucial to consider various factors that contribute to the success of your website.";
-
-const factors = [
-  {
-    image: image18,
-    title: "Purpose of the Site",
-    text: "The website's design should serve its purpose effectively. Ensure that users can easily find all the information they need about your products or services. Focus on providing value to visitors rather than just making the website visually attractive.",
-  },
-  {
-    image: image19,
-    title: "Usability",
-    text: "A user-friendly design is paramount. Usability refers to how easily users can interact with your site and find the information they seek. The navigation should be intuitive, allowing users to move seamlessly throughout the site.",
-    link: {
-      label: "usability guidelines by Google",
-      href: "https://www.google.com/",
-    },
-    linkPrefix: "Consider these usability guidelines from Google. Please find some ",
-  },
-  {
-    image: image20,
-    title: "Quality Content",
-    text: "Our website content is meticulously crafted to be informative and easy to understand. We ensure that all essential information about our services is readily available. It's crucial to note that our content is entirely original, as search engines penalize sites with duplicate content.",
-  },
-];
-
-const portfolioIntro =
-  "Discover Some of Our Web Design Projects: Below, you'll find a selection of our remarkable web design projects. These examples showcase our dedication to creating visually appealing and user-friendly websites that effectively communicate our clients' messages.";
-
-const portfolioItems = [
-  { image: image2, caption: "" },
-  { image: image3, caption: "" },
-];
-
 /* ---------- page ---------- */
 
 export default function WebsiteDevelopment() {
   const navigate = useNavigate();
+  const serviceQuery = useServicePage("website-development");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading website development content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`Website development content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="Website development content is not available." />;
+  }
+  const introParagraphs = serviceArray<string>(pageData, "introParagraphs");
+  const factors = serviceArray<{
+    image: string;
+    title: string;
+    text: string;
+    link?: { label: string; href: string };
+    linkPrefix?: string;
+  }>(pageData, "factors");
+  const portfolioItems = serviceArray<{ image: string; caption: string }>(pageData, "portfolioItems");
 
   return (
     <div className="min-h-screen bg-[#05060f] text-white antialiased selection:bg-blue-500/30">
@@ -105,24 +84,22 @@ export default function WebsiteDevelopment() {
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Website{" "}
+                {serviceText(pageData, "heroTitle")}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  Development
+                  {serviceText(pageData, "heroAccent")}
                 </span>
               </h1>
               <p className="mt-4 text-cyan-300 font-semibold tracking-wide">
-                Website Development — Ecommerce Development
+                {serviceText(pageData, "eyebrow")}
               </p>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                From simple informational sites to sophisticated e-commerce
-                platforms — a decade of experience building websites that
-                communicate your message clearly and effectively.
+                {serviceText(pageData, "heroDescription")}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 
                 onClick={() => navigate("/enquiryNow")}
                 className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-                  Enquiry Now
+                  {serviceText(pageData, "ctaLabel")}
                 </button>
                
               </div>
@@ -131,8 +108,8 @@ export default function WebsiteDevelopment() {
           <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image1}
-                alt="social media marketing"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -142,8 +119,8 @@ export default function WebsiteDevelopment() {
         {/* ---------------- OVERVIEW (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Overview"
-            title="Website Development — Ecommerce Development"
+            eyebrow={serviceText(pageData, "overviewEyebrow")}
+            title={serviceText(pageData, "overviewTitle")}
           />
           <Panel>
             {introParagraphs.map((p, i) => (
@@ -163,9 +140,9 @@ export default function WebsiteDevelopment() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="Before You Begin"
-              title="Factors That Contribute to a Successful Website"
-              sub={factorsIntro}
+              eyebrow={serviceText(pageData, "factorsEyebrow")}
+              title={serviceText(pageData, "factorsTitle")}
+              sub={serviceText(pageData, "factorsIntro")}
             />
             <div className="grid gap-6 md:grid-cols-3">
               {factors.map((f) => (
@@ -200,7 +177,7 @@ export default function WebsiteDevelopment() {
                           {" "}
                           {f.linkPrefix}
                           <a
-                            href={f.link.href}
+                            href={f.link?.href}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-cyan-400 underline decoration-cyan-400/40 underline-offset-2 hover:text-cyan-300"
@@ -221,9 +198,9 @@ export default function WebsiteDevelopment() {
         {/* ---------------- PORTFOLIO ---------------- */}
         <section className="mx-auto max-w-6xl px-6 py-24">
           <SectionHeading
-            eyebrow="Our Work"
-            title="Discover Some of Our Web Design Projects"
-            sub={portfolioIntro}
+            eyebrow={serviceText(pageData, "portfolioEyebrow")}
+            title={serviceText(pageData, "portfolioTitle")}
+            sub={serviceText(pageData, "portfolioIntro")}
           />
           <div className="grid gap-6 md:grid-cols-2">
             {portfolioItems.map((item, i) => (
@@ -255,23 +232,22 @@ export default function WebsiteDevelopment() {
             ))}
           </div>
           <p className="mt-8 text-center text-sm text-slate-500">
-            Please find few of our web design projects..
+            {serviceText(pageData, "portfolioCaption")}
           </p>
         </section>
 
         {/* ---------------- CTA ---------------- */}
         <section className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-            Ready To Build Your Website?
+            {serviceText(pageData, "ctaTitle")}
           </h2>
           <p className="mt-4 text-slate-400">
-            Let's design and develop a site that clearly communicates your
-            message and converts visitors into customers.
+            {serviceText(pageData, "ctaDescription")}
           </p>
           <button 
           onClick={() => navigate("/enquiryNow")}
           className="mt-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-            Enquiry Now
+            {serviceText(pageData, "ctaLabel")}
           </button>
         </section>
 

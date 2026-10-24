@@ -1,9 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
-import image1 from "../assets/Mastering Search Engine Optimization and Data Analytics.webp";
-import image2 from "../assets/How to Hire SEO Agency for Higher Website Traffic.webp";
-import image3 from "../assets/sem.webp";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -23,7 +21,14 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  type LucideIcon,
 } from "lucide-react";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+} from "@/hooks/useServicePage";
 
 /* ---------- shared bits (kept identical to SocialMediaMarketing.tsx) ---------- */
 
@@ -68,23 +73,6 @@ const introParagraphs = [
   "Let's take an example: if I search for \"Google\" in the search engine, I might be looking for an overview of Google, or I might be searching for an agency related to Google. In the search results, the top ad is a result of search engine marketing. These companies are trying to attract potential clients to their websites through paid advertisements.",
   "In SEM, the positioning of your promotion on the search engine results page is determined by the amount you pay for specific keywords (more popular keywords tend to be more expensive) and your ad's \"quality score\" in relation to others.",
   "Overall, SEM is a powerful way to boost visibility and drive relevant traffic to your website by strategically targeting search terms and potential customers.",
-];
-
-const comparison = [
-  {
-    image: image2,
-    title: "SEO",
-    paragraphs: [
-      "Search Engine Optimization (SEO) is the practice of improving your website's visibility and ranking within search engines like Google and Bing. Unlike paid advertisements, SEO focuses on obtaining organic traffic by naturally appearing in search engine results. By optimizing your website and its content, you aim to attract clicks from users who are actively searching for relevant information or products, with the ultimate goal of achieving specific objectives, such as increasing sales, sign-ups, or engagement.",
-    ],
-  },
-  {
-    image: image3,
-    title: "SEM",
-    paragraphs: [
-      "Search Engine Marketing (SEM) encompasses both Search Engine Optimization (SEO) and Pay-Per-Click (PPC) advertising. While SEO focuses on improving organic rankings, PPC is a paid advertising method that allows you to display ads within search engines. Major search engines like Google have ad platforms that enable businesses to deliver targeted ads to users. Some of our clients invest significant amounts, ranging from hundreds to thousands of dollars per month, in SEM to drive traffic to their websites. This approach is an effective way to attract potential customers and achieve specific marketing goals through paid placements within search engine results.",
-    ],
-  },
 ];
 
 const benefits = [
@@ -159,7 +147,28 @@ const benefits = [
 /* ---------- page ---------- */
 
 export default function SearchEngineMarketing() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const serviceQuery = useServicePage("search-engine-marketing");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading search engine marketing content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`Search engine marketing content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="Search engine marketing content is not available." />;
+  }
+  const iconByName: Record<string, LucideIcon> = {
+    MapPin, Store, Megaphone, MousePointerClick, Trophy, Wallet, Zap,
+    ClipboardCheck, Target, Search, TrendingUp, BarChart3,
+  };
+  const introParagraphs = serviceArray<string>(pageData, "introParagraphs");
+  const comparison = serviceArray<{ title: string; image: string; paragraphs: string[] }>(pageData, "comparison");
+  const benefits = serviceArray<{ title: string; icon: string; paragraphs: string[] }>(pageData, "benefits").map((item) => ({
+    ...item,
+    icon: iconByName[item.icon] || CheckCircle2,
+  }));
   return (
     <div className="min-h-screen bg-[#05060f] text-white antialiased selection:bg-blue-500/30">
       <Navbar />
@@ -176,21 +185,19 @@ export default function SearchEngineMarketing() {
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Search Engine{" "}
+                {serviceText(pageData, "heroTitle")}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  Marketing
+                  {serviceText(pageData, "heroAccent")}
                 </span>
               </h1>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                Creating paid advertising campaigns that appear in search
-                engine results — targeting the right keywords, in the right
-                locations, to put your brand at the top of the page.
+                {serviceText(pageData, "heroDescription")}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 
                 onClick={() => navigate("/enquiryNow")}
                 className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-                  Enquiry Now
+                  {serviceText(pageData, "ctaLabel")}
                 </button>
                 
               </div>
@@ -199,8 +206,8 @@ export default function SearchEngineMarketing() {
            <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image1}
-                alt="social media marketing"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -210,8 +217,8 @@ export default function SearchEngineMarketing() {
         {/* ---------------- INTRO (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Overview"
-            title="What Is Search Engine Marketing?"
+            eyebrow={serviceText(pageData, "overviewEyebrow")}
+            title={serviceText(pageData, "overviewTitle")}
           />
           <Panel>
             {introParagraphs.map((p, i) => (
@@ -230,8 +237,8 @@ export default function SearchEngineMarketing() {
         {/* ---------------- SEM vs SEO (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Know The Difference"
-            title="Search Engine Marketing (SEM) vs Search Engine Optimization (SEO)"
+            eyebrow={serviceText(pageData, "comparisonEyebrow")}
+            title={serviceText(pageData, "comparisonTitle")}
           />
           <div className="grid gap-6 md:grid-cols-2">
             {comparison.map((c) => (
@@ -265,8 +272,8 @@ export default function SearchEngineMarketing() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="The Benefits"
-              title="What Are The Benefits Of Search Engine Marketing"
+              eyebrow={serviceText(pageData, "benefitsEyebrow")}
+              title={serviceText(pageData, "benefitsTitle")}
             />
 
             {/* mobile: single-column rail */}
@@ -351,16 +358,15 @@ export default function SearchEngineMarketing() {
         {/* ---------------- CTA ---------------- */}
         <section className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-            Ready To Get Found On Google?
+            {serviceText(pageData, "ctaTitle")}
           </h2>
           <p className="mt-4 text-slate-400">
-            Let's build a search engine marketing strategy that turns
-            searches into customers.
+            {serviceText(pageData, "ctaDescription")}
           </p>
           <button 
           onClick={() => navigate("/enquiryNow")}
           className="mt-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-            Enquiry Now
+            {serviceText(pageData, "ctaLabel")}
           </button>
         </section>
 

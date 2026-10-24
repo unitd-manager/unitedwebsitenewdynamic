@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -27,18 +28,25 @@ import {
   Megaphone,
   ClipboardList,
   Send,
+  type LucideIcon,
 } from "lucide-react";
-import trafficImg from "@/assets/seo.webp";
-import brandImg from "@/assets/google_search.webp";
-import optimizationImg from "@/assets/keyword.webp";
-import audienceImg from "@/assets/target.webp";
-import competeImg from "@/assets/seooptimisation1.jfif";
-import rankGayTrainers from "@/assets/ranking-gay-trainers.webp";
-import rankFitnessTrainers from "@/assets/ranking-fitness-trainers.webp";
-import rankLotusGrill from "@/assets/ranking-lotus-grill.webp";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+  type ServicePageData,
+} from "@/hooks/useServicePage";
 import "./seo-optimization.css";
+
+const SEOPageDataContext = createContext<ServicePageData>({});
+
+function useSEOPageData() {
+  return useContext(SEOPageDataContext);
+}
 
 /* ---------- ANIMATION HELPERS ---------- */
 const fadeUp = {
@@ -79,7 +87,19 @@ const viewportOnce = { once: true, margin: "-80px" };
 const viewportOnceSmall = { once: true, margin: "-40px" };
 
 function SEOPage() {
+  const serviceQuery = useServicePage("seo-optimization");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading SEO content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`SEO content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="SEO content is not available." />;
+  }
   return (
+    <SEOPageDataContext.Provider value={pageData}>
     <main className="seo-page min-h-screen bg-background">
       <Navbar />
       <div className="pt-24">
@@ -100,11 +120,13 @@ function SEOPage() {
       </div>
       <FooterSection />
     </main>
+    </SEOPageDataContext.Provider>
   );
 }
 
 /* ---------- HERO ---------- */
 function Hero() {
+  const pageData = useSEOPageData();
   return (
     <section
       className="relative overflow-hidden text-white"
@@ -147,15 +169,15 @@ function Hero() {
             className="flex flex-col justify-center"
           >
             <h1 className="text-4xl font-black leading-tight tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
-              Search Engine
+              {serviceText(pageData, "heroTitle")}
               <br />
               <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                Optimisation
+                {serviceText(pageData, "heroAccent")}
               </span>
             </h1>
 
             <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75 sm:text-xl">
-              Boost your online visibility, attract qualified traffic, and outrank competitors with data-driven SEO strategies designed for sustainable business growth.
+              {serviceText(pageData, "heroDescription")}
             </p>
 
             <div className="mt-8 flex">
@@ -163,7 +185,7 @@ function Hero() {
                 href="#enquiry"
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_18px_70px_-30px_rgba(56,189,248,0.9)] transition duration-200 hover:-translate-y-0.5"
               >
-                Get Free SEO Audit
+                {serviceText(pageData, "ctaLabel")}
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </a>
             </div>
@@ -179,8 +201,8 @@ function Hero() {
               <div className="absolute inset-0 rounded-3xl bg-cyan-500/20 blur-3xl" />
 
               <img
-                src={competeImg}
-                alt="SEO Optimisation"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="relative h-[340px] w-full max-w-[520px] rounded-3xl border border-white/10 object-cover shadow-2xl"
               />
             </div>
@@ -192,6 +214,8 @@ function Hero() {
 }
 
 function Intro() {
+  const pageData = useSEOPageData();
+  const introParagraph = serviceArray<string>(pageData, "introParagraphs")[0] || "";
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden px-4 py-14 sm:px-6 sm:py-16 lg:py-20">
       <motion.div
@@ -203,20 +227,13 @@ function Intro() {
         className="mx-auto max-w-4xl text-center"
       >
         <span className="inline-flex items-center gap-2 rounded-full bg-brand/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand">
-          <TrendingUp className="h-3.5 w-3.5" /> SEO Score Check
+          <TrendingUp className="h-3.5 w-3.5" /> {serviceText(pageData, "introEyebrow")}
         </span>
         <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
-          Check Your Website SEO Score And Get{" "}
-          <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-brand)" }}>
-            2x More Traffic Per Day!!
-          </span>
+          {serviceText(pageData, "introTitle")}
         </h2>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          SEO is an essential aspect of every website, as it enhances <strong className="text-foreground">visibility on search engines</strong>.
-          By optimizing our website, search engines can easily identify and index our content,
-          making our products or services more accessible to the public. This increased visibility leads
-          to better <strong className="text-foreground">online exposure</strong>, ultimately helping us reach a broader audience and establish
-          familiarity with our offerings.
+          {introParagraph}
         </p>
       </motion.div>
     </section>
@@ -278,6 +295,7 @@ function WhyWeNeed() {
 }
 
 function AlternatingSections() {
+  const pageData = useSEOPageData();
   const sections = [
     {
       tag: "High Traffic to Your Website",
@@ -286,7 +304,7 @@ function AlternatingSections() {
         "Search engine optimization (SEO) is the most efficient means of increasing sales compared to other offline and online marketing methods. By focusing on optimizing your website for search engines, you can attract a highly targeted audience actively searching for products or services like yours.",
         "This targeted approach ensures that your marketing efforts are directed at individuals who are already interested in what you offer, significantly increasing the likelihood of converting them into customers. As a result, SEO provides a powerful and cost-effective strategy to drive sales and achieve business growth in the digital age.",
       ],
-      image: trafficImg,
+      image: serviceText(pageData, "trafficImage"),
       stat: { value: "120K+", label: "Monthly sessions tracked" },
       reverse: false,
     },
@@ -298,7 +316,7 @@ function AlternatingSections() {
         "Google's algorithm plays a pivotal role in search engine optimization (SEO) by continually evolving and updating. These algorithm changes regulate the optimization process and establish standard practices.",
         "To effectively optimize a website and drive legitimate traffic, it requires the expertise of an SEO specialist who understands Google's algorithm intricacies. A skilled professional can navigate the algorithm's complexities, ensuring that the website adheres to best practices and earns higher rankings in search results, ultimately attracting more relevant traffic.",
       ],
-      image: brandImg,
+      image: serviceText(pageData, "brandImage"),
       stat: { value: "70%", label: "Google market share" },
       reverse: true,
     },
@@ -310,7 +328,7 @@ function AlternatingSections() {
         "Crafting high-quality and informative content positions your site as a reputable source, prompting search engines to rank it higher when users seek relevant information. To further enhance your brand's online presence, ensure your content is written in a way that encourages other sites to link back to it. Earning backlinks from reputable sources enhances your site's authority and visibility in search engine results.",
         "Keeping these principles in mind allows you to select relevant keywords and craft content that not only resonates with your audience but also elevates your brand's presence in search engines. By consistently delivering valuable content, you establish your brand as a credible and trusted resource, building a strong online reputation over time.",
       ],
-      image: audienceImg,
+      image: serviceText(pageData, "audienceImage"),
       stat: { value: "64%", label: "Use search to find products" },
       reverse: false,
     },
@@ -323,7 +341,7 @@ function AlternatingSections() {
         "Optimizing your website with quality content and relevant keywords not only boosts your page ranking in search engines but also gives you a competitive edge, resulting in increased inquiries. According to a survey, websites that appear on the first page of search engine results receive an average of 24% of clicks, while those on the second page receive only 13%. By securing a higher ranking, you position your site to receive more clicks and engagement, surpassing your competitors.",
         "Achieving a prominent position in search engine results ensures that your website is more visible to potential customers, leading to a higher volume of inquiries. This advantage over your competitors allows you to attract more prospects and increase your chances of converting them into loyal customers.",
       ],
-      image: optimizationImg,
+      image: serviceText(pageData, "optimizationImage"),
       stat: { value: "24%", label: "Of clicks go to page #1" },
       reverse: true,
     },
@@ -597,6 +615,7 @@ function Process() {
 }
 
 function Rankings() {
+  const pageData = useSEOPageData();
   const rows = [
     { site: "www.prforbes.com", keyword: "gay trainers", country: "United States · google.com", rank: 2 },
     { site: "www.prforbes.com", keyword: "gay fitness trainers", country: "United States · google.com", rank: 2 },
@@ -624,11 +643,7 @@ function Rankings() {
         variants={staggerContainer}
         className="mx-auto mb-10 grid max-w-7xl gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {[
-          { src: rankGayTrainers, alt: "Google SERP ranking screenshot — gay trainers #2 on prforbes.com" },
-          { src: rankFitnessTrainers, alt: "Google SERP ranking screenshot — gay fitness trainers #2 on prforbes.com" },
-          { src: rankLotusGrill, alt: "Google SERP ranking screenshot — lotus grill hong kong #1 on coba-grills.hk" },
-        ].map((img, i) => (
+        {serviceArray<{ src: string; alt: string }>(pageData, "rankings").map((img, i) => (
           <motion.div
             key={i}
             variants={scaleIn}
@@ -687,7 +702,7 @@ function Rankings() {
   );
 }
 
-function BulletCard({ icon: Icon, title, items }: { icon: any; title: string; items: string[] }) {
+function BulletCard({ icon: Icon, title, items }: { icon: LucideIcon; title: string; items: string[] }) {
   return (
     <div className="group relative h-full overflow-hidden rounded-2xl border bg-card p-5 shadow-card transition hover:-translate-y-1 hover:shadow-elegant sm:p-6">
       <div className="mb-5 flex items-center gap-3">
@@ -1177,6 +1192,7 @@ function OffPageOptimization() {
 
 function CTA() {
   const navigate = useNavigate();
+  const pageData = useSEOPageData();
 
   return (
     <section id="enquiry" className="px-4 py-14 sm:px-6 sm:py-16 lg:py-20">
@@ -1191,22 +1207,22 @@ function CTA() {
         <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md">
           <BarChart3 className="h-7 w-7" />
         </div>
-        <h3 className="mt-6 text-3xl font-bold sm:text-4xl lg:text-5xl">Ready to rank higher?</h3>
+        <h3 className="mt-6 text-3xl font-bold sm:text-4xl lg:text-5xl">{serviceText(pageData, "ctaTitle")}</h3>
         <p className="mx-auto mt-4 max-w-2xl text-white/80">
-          Let our SEO specialists audit your website and craft a growth roadmap tailored to your business.
+          {serviceText(pageData, "ctaDescription")}
         </p>
         <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
           <button
             onClick={() => navigate("/enquiryNow")}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold backdrop-blur-sm transition hover:bg-white/10"
           >
-            Enquiry Now <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+            {serviceText(pageData, "ctaLabel")} <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
           </button>
           <a
             href="#"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold backdrop-blur-sm transition hover:bg-white/10"
           >
-            <Users className="h-4 w-4" /> Talk to an Expert
+            <Users className="h-4 w-4" /> {serviceText(pageData, "ctaSecondaryLabel")}
           </a>
         </div>
       </motion.div>

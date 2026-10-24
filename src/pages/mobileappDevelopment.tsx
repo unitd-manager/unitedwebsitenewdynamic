@@ -1,19 +1,4 @@
 import React from "react";
-// Update these paths to point to your own image assets
-import project16 from "../assets/smart.webp";
-import project17 from "../assets/pms1.webp";
-import project17b from "../assets/pms2.webp";
-import project18 from "../assets/hr1.webp";
-import project18b from "../assets/hr2.webp";
-import project19 from "../assets/admc.webp";
-import project20 from "../assets/sai1.webp";
-import project20b from "../assets/sai2.webp";
-import image from "../assets/download (1).webp";
-import image1 from "../assets/AI2.webp";
-import image2 from "../assets/AI.webp";
-import image3 from "../assets/img1 (1).webp";
-import image4 from "../assets/img1 (2).webp";
-import image5 from "../assets/img1 (3).webp";
 import { useNavigate } from "react-router-dom";
 import {
   Smartphone,
@@ -33,6 +18,13 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+} from "@/hooks/useServicePage";
 
 /* ---------- shared bits ---------- */
 
@@ -273,54 +265,24 @@ const ProjectsCarousel = ({ projects, perSlide = 2, intervalMs = 4000 }) => {
   );
 };
 
-/* ---------- content data (verbatim) ---------- */
-
-const introParagraph =
-  "The advent of smartphones has ushered in a new era of user experience. With users relying heavily on their devices, there has been a surge in Mobile App development. Every day, hundreds of apps are being developed to cater to the diverse needs of smartphone users. Mobile apps have become an essential platform for businesses and individuals to engage with their audience and provide valuable services on the go.";
-
-const businessUse = [
-  {
-    image: image2,
-    title: "Enhancing User Experience",
-    text: "It's widely acknowledged that Mobile Apps provide superior user experiences compared to websites. With enriched and highly valuable content, apps stand out from other web sources. Users perceive apps to be laser-focused on providing exactly what they seek, creating a compelling reason to choose the app over alternative platforms. This focus on user needs and seamless interactions drives more users towards adopting and engaging with mobile apps.",
-  },
-  {
-    image: image1,
-    title: "Boosting Business Growth",
-    text: "Having a dedicated app for your service or product creates a perception of high standard and reliability in the minds of your customers. This enhanced image draws more focus towards your business. Through the app, you establish a close and direct line of communication with your customers, providing them with all the information they need about your offerings. Any business updates or promotions can be swiftly delivered to targeted customers based on their specific product or service preferences. This personalized approach fosters stronger customer relationships and significantly contributes to driving business growth.",
-  },
-];
-
-const appTypes = [
-  {
-    image: image3,
-    title: "Native App",
-    text: "Native apps are specifically designed and built for specific platforms, making them available in the respective app stores. One significant advantage of native apps is their exceptional speed and the ability to utilize all the elements and features of the user's device. This ensures a seamless and optimized user experience.",
-  },
-  {
-    image: image4,
-    title: "Hybrid App",
-    text: "A hybrid app is a cost-effective combination of native and web applications. It leverages the strengths of both approaches, allowing it to adapt its functionality based on specific requirements. By incorporating elements from native apps and web applications, hybrid apps provide a versatile solution that can deliver a rich user experience while being budget-friendly.",
-  },
-  {
-    image: image5,
-    title: "Web App",
-    text: "A web app is an application that runs within a web browser and is built using HTML5, CSS, and JavaScript. It provides a user experience similar to a native app but has some limitations in accessing certain device elements. Despite these limitations, web apps offer the advantage of cross-platform compatibility, as they can be accessed on various devices with internet browsers.",
-  },
-];
-
-const projects = [
-  { name: "Smartcon", image: project16 },
-  { name: "PMS", images: [project17, project17b] },
-  { name: "HR", images: [project18, project18b] },
-  { name: "ADMC", image: project19 },
-  { name: "Saif Sports Club-Booking", images: [project20, project20b] },
-];
-
 /* ---------- page ---------- */
 
 export default function MobileAppDevelopment() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const serviceQuery = useServicePage("mobileapp-development");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading mobile app development content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`Mobile app development content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="Mobile app development content is not available." />;
+  }
+  const businessUse = serviceArray<{ image: string; title: string; text: string }>(pageData, "businessUse");
+  const appTypes = serviceArray<{ image: string; title: string; text: string }>(pageData, "appTypes");
+  const projects = serviceArray<{ name: string; image?: string; images?: string[] }>(pageData, "projects");
   return (
     <div className="min-h-screen bg-[#05060f] text-white antialiased selection:bg-blue-500/30">
       {/* background ambience */}
@@ -336,23 +298,21 @@ export default function MobileAppDevelopment() {
         <header className="mx-auto max-w-6xl px-6 pt-20 pb-16 md:pt-28 md:pb-24">
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
-              <Eyebrow>Service Details</Eyebrow>
+              <Eyebrow>{serviceText(pageData, "eyebrow")}</Eyebrow>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Mobile App{" "}
+                {serviceText(pageData, "heroTitle")}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  Development
+                  {serviceText(pageData, "heroAccent")}
                 </span>
               </h1>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                Native, hybrid, and web apps built to give your business a
-                direct, personal line of communication with your customers
-                wherever they are.
+                {serviceText(pageData, "heroDescription")}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 
                 onClick={() => navigate("/enquiryNow")}
                 className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-                  Enquiry Now
+                  {serviceText(pageData, "ctaLabel")}
                 </button>
                 <span className="text-sm text-slate-500">
                   Home&nbsp;/&nbsp;
@@ -364,8 +324,8 @@ export default function MobileAppDevelopment() {
             <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image}
-                alt="social media marketing"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -375,12 +335,12 @@ export default function MobileAppDevelopment() {
         {/* ---------------- OVERVIEW (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Overview"
-            title="The Significance of Mobile App?"
+            eyebrow={serviceText(pageData, "overviewEyebrow")}
+            title={serviceText(pageData, "overviewTitle")}
           />
           <Panel>
             <p className="text-slate-300 leading-relaxed">
-              {introParagraph}
+              {serviceText(pageData, "introParagraph")}
             </p>
           </Panel>
         </section>
@@ -389,8 +349,8 @@ export default function MobileAppDevelopment() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="Why It Matters"
-              title="Use of Mobile App in Business"
+              eyebrow={serviceText(pageData, "businessEyebrow")}
+              title={serviceText(pageData, "businessTitle")}
             />
             <div className="grid gap-6 md:grid-cols-2">
               {businessUse.map((b) => (
@@ -412,7 +372,7 @@ export default function MobileAppDevelopment() {
 
         {/* ---------------- TYPES OF APPS ---------------- */}
         <section className="mx-auto max-w-6xl px-6 py-24">
-          <SectionHeading title="Types of Apps" />
+          <SectionHeading title={serviceText(pageData, "appTypesTitle")} />
           <div className="grid gap-6 lg:grid-cols-3">
             {appTypes.map((b) => (
               <Panel
@@ -437,8 +397,8 @@ export default function MobileAppDevelopment() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="Our Work"
-              title="Mobile App Projects We've Built"
+              eyebrow={serviceText(pageData, "projectsEyebrow")}
+              title={serviceText(pageData, "projectsTitle")}
             />
             <ProjectsCarousel projects={projects} perSlide={2} intervalMs={4000} />
           </div>
@@ -447,16 +407,15 @@ export default function MobileAppDevelopment() {
         {/* ---------------- CTA ---------------- */}
         <section className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-            Ready To Build Your App?
+            {serviceText(pageData, "ctaTitle")}
           </h2>
           <p className="mt-4 text-slate-400">
-            Let's turn your idea into a native, hybrid, or web app your
-            customers will love using.
+            {serviceText(pageData, "ctaDescription")}
           </p>
           <button 
           onClick={() => navigate("/enquiryNow")}
           className="mt-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-            Enquiry Now
+            {serviceText(pageData, "ctaLabel")}
           </button>
         </section>
 

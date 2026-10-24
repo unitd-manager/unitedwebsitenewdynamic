@@ -1,7 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import FooterSection from "../components/FooterSection";
 import image1 from "../assets/alexander-shatov-mr4JG4SYOF8-unsplash.webp";
 import image2 from "../assets/milad-fakurian-pP5gt6Qbzig-unsplash.webp";
 import image3 from "../assets/boliviainteligente-FnWQJfyB-TA-unsplash.webp";
@@ -10,6 +8,9 @@ import image5 from "../assets/city-church-ca-NKS1k-3fX0U-unsplash.webp";
 import image6 from "../assets/aman-pal-15r9RAOy38Q-unsplash.webp";
 import image7 from "../assets/boliviainteligente-pDYtprm28Lc-unsplash.webp";
 import image8 from "../assets/manas-rb-NmZ3SDzSYio-unsplash.webp";
+import Navbar from "../components/Navbar";
+import FooterSection from "../components/FooterSection";
+import { ServicePageStatus } from "@/components/ServicePageStatus";
 import {
   Users,
   TrendingUp,
@@ -34,7 +35,14 @@ import {
   Twitter,
   Linkedin,
   ChevronRight,
+  type LucideIcon,
 } from "lucide-react";
+import {
+  getServicePageData,
+  serviceArray,
+  serviceText,
+  useServicePage,
+} from "@/hooks/useServicePage";
 
 /* ---------- shared bits ---------- */
 
@@ -377,7 +385,35 @@ const strategySteps = [
 /* ---------- page ---------- */
 
 export default function SocialMediaMarketing() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const serviceQuery = useServicePage("social-media-marketing");
+  if (serviceQuery.isPending) {
+    return <ServicePageStatus message="Loading social media marketing content..." />;
+  }
+  if (serviceQuery.isError) {
+    return <ServicePageStatus message={`Social media marketing content could not be loaded: ${serviceQuery.error.message}`} />;
+  }
+  const pageData = getServicePageData(serviceQuery.data?.content);
+  if (!pageData) {
+    return <ServicePageStatus message="Social media marketing content is not available." />;
+  }
+  type ParagraphCard = { title: string; paragraphs: string[]; icon: string };
+  type StrategyStep = { title: string; paragraphs: string[]; image: string; icon: string };
+  const iconByName: Record<string, LucideIcon> = {
+    ImageIcon, PenTool, Video, Mail, Target, Users, Compass, Layers, Radio,
+  };
+  const introParagraphs = serviceArray<string>(pageData, "introParagraphs");
+  const adTypes = serviceArray<ParagraphCard>(pageData, "adTypes").map((item) => ({
+    ...item,
+    icon: iconByName[item.icon] || ImageIcon,
+  }));
+  const bridgeParagraphs = serviceArray<string>(pageData, "bridgeParagraphs");
+  const advantages = serviceArray<{ title: string; text: string }>(pageData, "advantages");
+  const strategyIntro = serviceText(pageData, "strategyIntro");
+  const strategySteps = serviceArray<StrategyStep>(pageData, "strategySteps").map((item) => ({
+    ...item,
+    icon: iconByName[item.icon] || Target,
+  }));
   
   return (
     <div className="min-h-screen bg-[#05060f] text-white antialiased selection:bg-blue-500/30">
@@ -395,21 +431,19 @@ export default function SocialMediaMarketing() {
           <div className="grid items-center gap-14 md:grid-cols-2">
             <div>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Social Media{" "}
+                {serviceText(pageData, "heroTitle")}{" "}
                 <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  Marketing
+                  {serviceText(pageData, "heroAccent")}
                 </span>
               </h1>
               <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
-                Promoting businesses, products, or services on various social
-                media platforms — reaching and engaging a targeted audience
-                across YouTube, Facebook, Instagram, and more.
+                {serviceText(pageData, "heroDescription")}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button 
                 onClick={() => navigate("/enquiryNow")}
                 className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-                  Enquiry Now
+                  {serviceText(pageData, "ctaLabel")}
                 </button>
                
               </div>
@@ -418,8 +452,8 @@ export default function SocialMediaMarketing() {
             <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image1}
-                alt="social media marketing"
+                src={serviceText(pageData, "heroImage")}
+                alt={serviceText(pageData, "heroImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -429,8 +463,8 @@ export default function SocialMediaMarketing() {
         {/* ---------------- INTRO (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Overview"
-            title="What Is Social Media Marketing?"
+            eyebrow={serviceText(pageData, "overviewEyebrow")}
+            title={serviceText(pageData, "overviewTitle")}
           />
           <Panel>
             {introParagraphs.map((p, i) => (
@@ -449,8 +483,8 @@ export default function SocialMediaMarketing() {
         {/* ---------------- AD TYPES (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <SectionHeading
-            eyebrow="Ad Formats"
-            title="Types of Social Media Ads"
+            eyebrow={serviceText(pageData, "adTypesEyebrow")}
+            title={serviceText(pageData, "adTypesTitle")}
           />
           <div className="grid gap-6 md:grid-cols-2">
             {adTypes.map((a) => (
@@ -478,9 +512,9 @@ export default function SocialMediaMarketing() {
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div className="text-left">
-              <Eyebrow>Grow Further</Eyebrow>
+              <Eyebrow>{serviceText(pageData, "bridgeEyebrow")}</Eyebrow>
               <h2 className="mt-5 text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                Build Your Personal Brand
+                {serviceText(pageData, "bridgeTitle")}
               </h2>
               {bridgeParagraphs.map((p, i) => (
                 <p
@@ -498,8 +532,8 @@ export default function SocialMediaMarketing() {
          <div className="relative mx-auto flex h-80 w-full max-w-[28rem] items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-[28rem] md:w-full">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image2}
-                alt="social media marketing"
+                src={serviceText(pageData, "bridgeImage")}
+                alt={serviceText(pageData, "bridgeImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -510,8 +544,8 @@ export default function SocialMediaMarketing() {
         <section className="border-y border-white/10 bg-white/[0.02] py-24">
           <div className="mx-auto max-w-6xl px-6">
             <SectionHeading
-              eyebrow="The Benefits"
-              title="Social Media Marketing Advantages"
+              eyebrow={serviceText(pageData, "advantagesEyebrow")}
+              title={serviceText(pageData, "advantagesTitle")}
             />
 
             {/* mobile: single-column rail */}
@@ -582,8 +616,8 @@ export default function SocialMediaMarketing() {
         {/* ---------------- STRATEGY INTRO (full text) ---------------- */}
         <section className="mx-auto max-w-6xl px-6 py-24">
           <SectionHeading
-            eyebrow="Our Process"
-            title="How to Design an Effective and Comprehensive Social Media Strategy"
+            eyebrow={serviceText(pageData, "strategyEyebrow")}
+            title={serviceText(pageData, "strategyTitle")}
           />
           <div className="grid items-center gap-12 md:grid-cols-2">
             <p className="text-left text-slate-300 leading-relaxed">
@@ -594,8 +628,8 @@ export default function SocialMediaMarketing() {
            <div className="relative mx-auto flex h-72 w-72 items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-sm md:h-96 md:w-96">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-400/20 blur-2xl" />
               <img
-                src={image3}
-                alt="social media marketing"
+                src={serviceText(pageData, "strategyImage")}
+                alt={serviceText(pageData, "strategyImageAlt")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -610,16 +644,15 @@ export default function SocialMediaMarketing() {
         {/* ---------------- CTA ---------------- */}
         <section className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-            Ready To Grow Your Brand?
+            {serviceText(pageData, "ctaTitle")}
           </h2>
           <p className="mt-4 text-slate-400">
-            Let's build a social media strategy that turns followers into
-            customers.
+            {serviceText(pageData, "ctaDescription")}
           </p>
           <button 
           onClick={() => navigate("/enquiryNow")}
           className="mt-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-105">
-            Enquiry Now
+            {serviceText(pageData, "ctaLabel")}
           </button>
         </section>
 
