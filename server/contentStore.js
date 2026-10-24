@@ -2,18 +2,46 @@ import mysql from "mysql2/promise";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import productSeeds from "./seeds/products.js";
+import serviceSeeds from "./seeds/services.js";
+import blogSeeds, { blogPageSeed } from "./seeds/blogs.js";
 
 let pool;
 
 function mergeMissing(defaults, current) {
+  const seedVersionKey = defaults &&
+    typeof defaults === "object" &&
+    !Array.isArray(defaults)
+    ? Object.keys(defaults).find((key) => key.endsWith("SeedVersion"))
+    : undefined;
+  if (
+    seedVersionKey &&
+    Number(defaults[seedVersionKey]) > Number(current?.[seedVersionKey] || 0)
+  ) {
+    return {
+      ...(current && typeof current === "object" && !Array.isArray(current) ? current : {}),
+      ...defaults,
+    };
+  }
+
   if (Array.isArray(defaults)) {
-    if (!Array.isArray(current) || current.length === 0) return defaults;
-    if (current.some((item) => item && typeof item === "object")) {
-      return current.map((item, index) =>
-        defaults[index] && item && typeof item === "object"
-          ? mergeMissing(defaults[index], item)
-          : item,
-      );
+    if (!Array.isArray(current) || current.length === 0) {
+      return defaults;
+    }
+    if (defaults.some((item) => item && typeof item === "object")) {
+      return Array.from({ length: Math.max(defaults.length, current.length) }, (_, index) => {
+        const defaultItem = defaults[index];
+        const currentItem = current[index];
+        if (
+          defaultItem &&
+          typeof defaultItem === "object" &&
+          currentItem &&
+          typeof currentItem === "object"
+        ) {
+          return mergeMissing(defaultItem, currentItem);
+        }
+        return currentItem === undefined ? defaultItem : currentItem;
+      });
     }
     return current;
   }
@@ -161,6 +189,9 @@ export async function saveContentAsset(assetPath, mimeType, data) {
 
 async function seedInitialContent() {
   const initialContent = [
+    ...productSeeds,
+    ...serviceSeeds,
+    blogPageSeed,
     {
       type: "page",
       slug: "home",
@@ -512,48 +543,7 @@ async function seedInitialContent() {
         image: "/images/home/technology6.webp",
       },
     },
-    {
-      type: "product",
-      slug: "trading-management",
-      title: "Trading Management",
-      content: { href: "/trading-management" },
-    },
-    {
-      type: "product",
-      slug: "payroll-management",
-      title: "Payroll Management",
-      content: { href: "/payroll-management" },
-    },
-    {
-      type: "product",
-      slug: "project-management",
-      title: "Project Management",
-      content: { href: "/project-management" },
-    },
-    {
-      type: "product",
-      slug: "school-management",
-      title: "School Management",
-      content: { href: "/school-management" },
-    },
-    {
-      type: "product",
-      slug: "smart-construction-crm-software",
-      title: "Smart Construction",
-      content: { href: "/smart-construction-crm-software" },
-    },
-    {
-      type: "product",
-      slug: "customer-relationship-management",
-      title: "Customer Relationship Management",
-      content: { href: "/customer-relationship-management" },
-    },
-    {
-      type: "product",
-      slug: "enterprise-resource-planning",
-      title: "Enterprise Resource Planning",
-      content: { href: "/enterprise-resource-planning" },
-    },
+    ...blogSeeds,
     {
       type: "navigation",
       slug: "main",

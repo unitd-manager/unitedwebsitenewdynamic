@@ -53,7 +53,30 @@ const Navbar = () => {
   const { content } = useHomeContent();
   const { data: navigationItems } = useCmsItems("navigation");
   const productsQuery = useCmsItems("product");
+  const servicesQuery = useCmsItems("service");
   const products = productsQuery.data || [];
+  const services = servicesQuery.data || [];
+  const serviceLink = (slug: string, fallbackLabel: string) => {
+    const service = services.find((item) => item.slug === slug);
+    return {
+      label: service?.title || fallbackLabel,
+      href: `/${slug}`,
+    };
+  };
+  const serviceDropdown: NavigationLink["dropdown"] = [
+    {
+      label: "Digital Marketing",
+      href: "/seo-optimization",
+      children: [
+        serviceLink("search-engine-marketing", "Search Engine Marketing"),
+        serviceLink("social-media-marketing", "Social Media Marketing"),
+        serviceLink("seo-optimization", "Search Engine Optimization"),
+      ],
+    },
+    serviceLink("website-development", "Website Development"),
+    serviceLink("mobileapp-development", "Mobile App Development"),
+    serviceLink("cloud-hosting", "Cloud Hosting"),
+  ];
   const configuredLinks = navigationItems?.find((item) => item.slug === "main")?.content.links;
   const navLinks: NavigationLink[] = Array.isArray(configuredLinks)
     ? (configuredLinks as NavigationLink[]).map((link) => ({
@@ -65,6 +88,9 @@ const Navbar = () => {
                 href: String(product.content.href || `/${product.slug}`),
               })),
             }
+          : {}),
+        ...(link.label === "Services"
+          ? { dropdown: serviceDropdown }
           : {}),
       }))
     : [];
@@ -167,6 +193,13 @@ const Navbar = () => {
               {link.dropdown ? (
                 <button
                   type="button"
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === link.label}
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === link.label ? null : link.label,
+                    )
+                  }
                   className={`flex cursor-default items-center gap-1 font-medium transition-all duration-300 ${navText}`}
                 >
                   {link.label}
@@ -207,6 +240,11 @@ const Navbar = () => {
                     group-hover:pointer-events-auto
                     group-hover:opacity-100
                   "
+                  style={openDropdown === link.label ? {
+                    visibility: "visible",
+                    opacity: 1,
+                    pointerEvents: "auto",
+                  } : undefined}
                 >
                   <div className="rounded-md border border-white/10 bg-[#0B1220] py-2 shadow-xl">
                     {link.dropdown.map((item) => (
@@ -227,6 +265,14 @@ const Navbar = () => {
                         ) : item.children ? (
                           <button
                             type="button"
+                            onClick={() =>
+                              setOpenSubDropdown(
+                                openSubDropdown === item.label
+                                  ? null
+                                  : item.label,
+                              )
+                            }
+                            aria-expanded={openSubDropdown === item.label}
                             className="flex w-full items-center justify-between px-4 py-2 text-white hover:bg-[#111C2E]"
                           >
                             <span>{item.label}</span>
@@ -257,6 +303,11 @@ const Navbar = () => {
                               group-hover/item:pointer-events-auto
                               group-hover/item:opacity-100
                             "
+                            style={openSubDropdown === item.label ? {
+                              visibility: "visible",
+                              opacity: 1,
+                              pointerEvents: "auto",
+                            } : undefined}
                           >
                             {item.children.map((child) => (
                               <Link

@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import FooterSection from "@/components/FooterSection";
 import Navbar from "@/components/Navbar";
-import CustomerRelationshipManagement from "../pages/customerrelationshipmanagement";
-import EnterpriseResourcePlanning from "../pages/enterpriceresourceplanning";
-import PayrollManagement from "../pages/payrollmanagement";
-import ProjectManagement from "../pages/ProjectManagement";
-import SchoolManagement from "../pages/schoolmanagement";
-import SmartConstruction from "../pages/smartconstruction";
-import TradingManagement from "../pages/tradingmanagement";
 import { useLocation } from "react-router-dom";
+import ProductDetailPage from "./ProductDetailPage";
 
 const projects = [
   { id: "trading-management", name: "Trading Management" },
@@ -53,19 +47,7 @@ const ProjectSelector = ({
 
       
 
-      {selectedProject === "trading-management" && <TradingManagement />}
-      {selectedProject === "payroll-management" && <PayrollManagement />}
-      {selectedProject === "project-management" && <ProjectManagement />}
-      {selectedProject === "school-management" && <SchoolManagement />}
-      {selectedProject === "smart-construction-crm-software" && (
-        <SmartConstruction />
-      )}
-      {selectedProject === "customer-relationship-management" && (
-        <CustomerRelationshipManagement />
-      )}
-      {selectedProject === "enterprise-resource-planning" && (
-        <EnterpriseResourcePlanning />
-      )}
+      <ProductDetailPage slug={selectedProject} />
 
       <FooterSection />
     </div>

@@ -50,6 +50,7 @@ function setAtPath(
 function getDefaultArrayItem(path: ContentPath, contentType: string): unknown {
   const key = String(path[path.length - 1] || "").toLowerCase();
   if (key === "stats") return { value: "", label: "" };
+  if (key === "faqs") return { question: "", answer: "" };
   if (key === "links" && contentType === "navigation") {
     return { label: "", href: "", type: "route" };
   }

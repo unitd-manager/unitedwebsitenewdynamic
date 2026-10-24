@@ -10,9 +10,13 @@ type PlatformCapability = {
 
 type PlatformCapabilitiesCarouselProps = {
   cards: PlatformCapability[];
+  title?: string;
 };
 
-const PlatformCapabilitiesCarousel = ({ cards }: PlatformCapabilitiesCarouselProps) => {
+const PlatformCapabilitiesCarousel = ({
+  cards,
+  title = "Platform Capabilities",
+}: PlatformCapabilitiesCarouselProps) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -62,7 +66,7 @@ const PlatformCapabilitiesCarousel = ({ cards }: PlatformCapabilitiesCarouselPro
   return (
     <section className="mt-12">
       <div className="flex items-center justify-between">
-        <h2 className="text-4xl font-black tracking-normal text-white">Platform Capabilities</h2>
+        <h2 className="text-4xl font-black tracking-normal text-white">{title}</h2>
       </div>
 
       <Carousel opts={{ loop: true, align: "start" }} setApi={setApi}>

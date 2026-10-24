@@ -53,7 +53,7 @@ export const articles = [
     author: {
       name: "Maya Chen",
       role: "Senior Research Editor",
-    },
+    }, 
     content: [
       {
         type: "paragraph",

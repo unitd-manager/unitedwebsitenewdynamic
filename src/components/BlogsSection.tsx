@@ -7,58 +7,27 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { articles } from "../data/articles";
-import { useCmsItems } from "@/hooks/useCmsContent";
+import { useCmsItem, useCmsItems } from "@/hooks/useCmsContent";
+import { toBlogArticle, type BlogArticle } from "@/lib/blogContent";
 import Navbar from "./Navbar";
 import FooterSection from "./FooterSection";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import heroBg from "../assets/blog page.webp";
 
 export default function BlogPage() {
   const navigate = useNavigate();
   const blogsQuery = useCmsItems("blog");
-  const cmsBlogs = blogsQuery.data || [];
+  const pageQuery = useCmsItem("page", "blog");
 
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<BlogArticle[]>([]);
 
-  const blogItems = blogsQuery.isSuccess
-    ? cmsBlogs.map((item) => {
-        const existing = articles.find((article) => article.slug === item.slug);
-        const cmsAuthor =
-          item.content.author &&
-          typeof item.content.author === "object" &&
-          !Array.isArray(item.content.author)
-            ? (item.content.author as Record<string, unknown>)
-            : undefined;
-        return {
-          ...existing,
-          slug: item.slug,
-          title: item.title,
-          category: String(item.content.category || existing?.category || "Technology"),
-          date: String(item.content.date || existing?.date || ""),
-          readTime: String(item.content.readTime || existing?.readTime || ""),
-          img: String(item.content.img || item.content.image || existing?.img || ""),
-          images: Array.isArray(item.content.images)
-            ? item.content.images.map(String)
-            : existing?.images || [],
-          description: String(item.content.description || existing?.description || ""),
-          author: {
-            name: String(cmsAuthor?.name || existing?.author?.name || ""),
-            role: String(cmsAuthor?.role || existing?.author?.role || ""),
-          },
-          content: Array.isArray(item.content.content)
-            ? item.content.content
-            : existing?.content || [],
-        };
-      })
-    : articles;
+  const blogItems = (blogsQuery.data || []).map(toBlogArticle);
+  const pageContent = pageQuery.data?.content;
+  const pageText = (key: string) =>
+    typeof pageContent?.[key] === "string" ? String(pageContent[key]) : "";
   const categories = ["All", ...new Set(blogItems.map((article) => article.category))];
 
-  const getMatches = (text: string) => {
+  const getMatches = (text: string): BlogArticle[] => {
     const q = text.trim().toLowerCase();
     if (!q) return [];
     return blogItems.filter(
@@ -75,7 +44,7 @@ export default function BlogPage() {
     setSuggestions(getMatches(value).slice(0, 5));
   };
 
-  const goToArticle = (slug) => {
+  const goToArticle = (slug: string) => {
     setSuggestions([]);
     setQuery("");
     navigate(`/blog/${slug}`);
@@ -86,8 +55,6 @@ export default function BlogPage() {
     const matches = getMatches(query);
     if (matches.length > 0) goToArticle(matches[0].slug);
   };
-
-  const featured = blogItems[0];
 
   const visibleArticles =
     activeCategory === "All"
@@ -106,6 +73,37 @@ export default function BlogPage() {
     );
   }
 
+  if (blogsQuery.isPending || pageQuery.isPending) {
+    return (
+      <>
+        <Navbar />
+        <main className="flex min-h-[60vh] items-center justify-center bg-[#04060f] px-6 text-center text-white">
+          <p role="status">Loading blog content...</p>
+        </main>
+        <FooterSection />
+      </>
+    );
+  }
+
+  if (blogsQuery.isError || pageQuery.isError || !pageContent) {
+    const error = blogsQuery.error || pageQuery.error;
+    return (
+      <>
+        <Navbar />
+        <main className="flex min-h-[60vh] items-center justify-center bg-[#04060f] px-6 text-center text-white">
+          <p role="alert" className="max-w-xl">
+            {error
+              ? `Blog content could not be loaded: ${error.message}`
+              : "Blog page content is not available."}
+          </p>
+        </main>
+        <FooterSection />
+      </>
+    );
+  }
+
+  const featured = blogItems[0];
+
   return (
     <>
       <Navbar />
@@ -121,55 +119,42 @@ export default function BlogPage() {
               rgba(4,6,15,0.35) 0%,
               rgba(4,6,15,0.55) 60%,
               rgba(4,6,15,0.95) 100%
-            ), url(${heroBg})`,
+            ), url(${pageText("heroBackgroundImage")})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
 
-/*style={{
-  backgroundImage: `linear-gradient(
-    180deg,
-    rgba(4,6,15,0) 0%,
-    rgba(4,6,15,0.15) 60%,
-    rgba(4,6,15,0.9) 100%
-  ), url(${heroBg})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  minHeight: "60vh",
-}}*/
-
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-36 pb-14 sm:pb-20 md:pb-28">
             <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/60 bg-cyan-400/40 px-4 py-1.5 text-[11px] uppercase tracking-[0.25em] text-cyan-50 font-semibold">
-              UnitedWeb Journal
+              {pageText("heroEyebrow")}
             </span>
 
             <h1 className="mt-5 sm:mt-7 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.02] max-w-4xl">
-              Field notes on{" "}
+              {pageText("heroTitlePrefix")}{" "}
               <span className="bg-gradient-to-r from-cyan-500 via-sky-300 to-blue-400 bg-clip-text text-transparent">
-                AI, automation
+                {pageText("heroTitleAccent")}
               </span>{" "}
-              &amp; digital growth.
+              {pageText("heroTitleSuffix")}
             </h1>
 
             <p className="mt-5 sm:mt-7 max-w-2xl text-sm sm:text-base md:text-lg text-white/70 leading-relaxed">
-              Playbooks, teardowns and behind-the-build stories from a team
-              shipping production systems for clients across multiple industries.
+              {pageText("heroDescription")}
             </p>
 
             {/* STATS */}
             <div className="mt-8 sm:mt-10 flex flex-wrap gap-x-8 sm:gap-x-12 gap-y-5 sm:gap-y-6">
               <div>
                 <p className="text-3xl md:text-4xl font-bold">{blogItems.length}+</p>
-                <p className="text-sm text-white/50 mt-1">Articles published</p>
+                <p className="text-sm text-white/50 mt-1">{pageText("articleCountLabel")}</p>
               </div>
               <div>
-                <p className="text-3xl md:text-4xl font-bold">6</p>
-                <p className="text-sm text-white/50 mt-1">Topics covered</p>
+                <p className="text-3xl md:text-4xl font-bold">{categories.length - 1}</p>
+                <p className="text-sm text-white/50 mt-1">{pageText("topicCountLabel")}</p>
               </div>
               <div>
-                <p className="text-3xl md:text-4xl font-bold">24/7</p>
-                <p className="text-sm text-white/50 mt-1">Always up to date</p>
+                <p className="text-3xl md:text-4xl font-bold">{pageText("freshnessValue")}</p>
+                <p className="text-sm text-white/50 mt-1">{pageText("freshnessLabel")}</p>
               </div>
             </div>
 
@@ -180,14 +165,14 @@ export default function BlogPage() {
                 <input
                   value={query}
                   onChange={handleChange}
-                  placeholder="Search articles, topics, authors..."
+                  placeholder={pageText("searchPlaceholder")}
                   className="min-w-0 flex-1 bg-transparent outline-none text-sm"
                 />
                 <button
                   type="submit"
                   className="shrink-0 bg-gradient-to-r from-cyan-400 to-blue-500 text-black px-4 sm:px-5 py-2 rounded-full text-sm whitespace-nowrap"
                 >
-                  Search
+                  {pageText("searchButton")}
                 </button>
               </div>
 
@@ -236,7 +221,7 @@ export default function BlogPage() {
 
         {/* FEATURED ARTICLE */}
         <div className="max-w-7xl mx-auto px-6 mt-10">
-          <motion.div
+          {featured && <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -245,7 +230,7 @@ export default function BlogPage() {
             <div className="flex justify-between flex-col md:flex-row gap-8">
               <div>
                 <span className="text-xs uppercase tracking-[0.25em] text-cyan-300 font-semibold">
-                  Featured &middot; {featured.category}
+                  {pageText("featuredLabel")} &middot; {featured.category}
                 </span>
                 <h3 className="mt-4 text-2xl md:text-3xl font-bold leading-snug max-w-2xl">
                   {featured.title}
@@ -265,10 +250,10 @@ export default function BlogPage() {
                 to={`/blog/${featured.slug}`}
                 className="border border-cyan-400/40 bg-cyan-400/10 text-cyan-200 px-5 py-2.5 rounded-full hover:bg-cyan-400/20 transition-colors whitespace-nowrap self-start h-fit flex items-center gap-1"
               >
-                Read article <ArrowUpRight className="w-3.5 h-3.5" />
+                {pageText("readArticleLabel")} <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-          </motion.div>
+          </motion.div>}
         </div>
 
         {/* LATEST ARTICLES GRID */}
@@ -279,12 +264,12 @@ export default function BlogPage() {
             viewport={{ once: true }}
             className="flex items-end justify-between mb-10"
           >
-            <h2 className="text-3xl md:text-4xl font-bold">Latest articles</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">{pageText("latestArticlesTitle")}</h2>
             <button
               onClick={() => setActiveCategory("All")}
               className="hidden sm:flex items-center gap-1 text-sm text-cyan-300 hover:text-cyan-200 transition-colors"
             >
-              View all <ArrowUpRight className="w-4 h-4" />
+              {pageText("viewAllLabel")} <ArrowUpRight className="w-4 h-4" />
             </button>
           </motion.div>
 
@@ -337,24 +322,23 @@ export default function BlogPage() {
           <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="max-w-md">
               <h3 className="text-2xl md:text-3xl font-bold">
-                Get the next playbook in your inbox.
+                {pageText("newsletterTitle")}
               </h3>
               <p className="text-white/60 mt-3">
-                One concise email a month. AI builds, growth experiments, and lessons from real
-                client work. No fluff.
+                {pageText("newsletterDescription")}
               </p>
             </div>
             <form className="flex min-w-0 w-full flex-col items-stretch gap-3 rounded-2xl border border-white/10 bg-black/30 px-4 py-4 md:w-[420px] md:flex-row md:items-center md:gap-2 md:rounded-full md:px-5 md:py-2">
               <input
                 type="email"
-                placeholder="you@company.com"
+                placeholder={pageText("newsletterPlaceholder")}
                 className="min-w-0 flex-1 bg-transparent text-center text-sm outline-none md:text-left"
               />
               <button
                 type="submit"
                 className="shrink-0 rounded-full bg-white px-5 py-2 text-sm font-semibold text-black whitespace-nowrap"
               >
-                Subscribe
+                {pageText("newsletterButton")}
               </button>
             </form>
           </div>

@@ -11,30 +11,12 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { articles, getArticleBySlug } from "../data/articles";
-import { useCmsItem } from "@/hooks/useCmsContent";
+import { useCmsItem, useCmsItems } from "@/hooks/useCmsContent";
+import { toBlogArticle } from "@/lib/blogContent";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
 
-type ArticleBlock = {
-  type: string;
-  text?: string;
-  index?: number;
-  id?: string;
-};
-
-type ArticleView = {
-  slug: string;
-  title: string;
-  category: string;
-  date: string;
-  readTime: string;
-  img: string;
-  images: string[];
-  description: string;
-  author: { name: string; role: string };
-  content: ArticleBlock[];
-};
+type ArticleBlock = ReturnType<typeof toBlogArticle>["content"][number];
 
 /* ─── Reading progress bar ─── */
 const ReadingProgress = () => {
@@ -67,11 +49,14 @@ const buildTOC = (content: ArticleBlock[]) =>
 const Sidebar = ({
   blog,
   toc,
+  pageText,
 }: {
-  blog: Pick<ArticleView, "slug">;
+  blog: { slug: string };
   toc: { id: string; text: string }[];
+  pageText: (key: string) => string;
 }) => {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const recentBlogsQuery = useCmsItems("blog");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -89,7 +74,10 @@ const Sidebar = ({
     return () => observer.disconnect();
   }, [toc]);
 
-  const recentBlogs = articles.filter((a) => a.slug !== blog.slug).slice(0, 6);
+  const recentBlogs = (recentBlogsQuery.data || [])
+    .filter((item) => item.slug !== blog.slug)
+    .slice(0, 6)
+    .map(toBlogArticle);
 
   return (
     <motion.aside
@@ -113,9 +101,11 @@ const Sidebar = ({
               </div>
               <div>
                 <h3 className="text-xs font-bold text-white uppercase tracking-widest leading-none">
-                  In this article
+                  {pageText("tableOfContentsTitle")}
                 </h3>
-                <p className="text-[10px] text-white/35 mt-1">{toc.length} sections</p>
+                <p className="text-[10px] text-white/35 mt-1">
+                  {toc.length} {pageText("sectionsLabel")}
+                </p>
               </div>
             </div>
             <ul className="space-y-1.5 relative">
@@ -152,7 +142,7 @@ const Sidebar = ({
         {/* Recent Articles */}
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold text-white uppercase tracking-widest flex-shrink-0">
-            Recent Articles
+            {pageText("recentArticlesTitle")}
           </h3>
           {recentBlogs.map((item, i) => (
             <Link
@@ -209,7 +199,13 @@ const BlogDetail = () => {
     data: cmsBlog,
     isPending: isCmsPending,
     isError: isCmsError,
+    error: cmsError,
   } = useCmsItem("blog", slug || "");
+  const blogPageQuery = useCmsItem("page", "blog");
+  const pageText = (key: string) => {
+    const value = blogPageQuery.data?.content[key];
+    return typeof value === "string" ? value : "";
+  };
   const heroRef = useRef(null);
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 500], [0, 140]);
@@ -218,38 +214,7 @@ const BlogDetail = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const fallbackBlog = getArticleBySlug(slug);
-  const cmsAuthor =
-    cmsBlog?.content.author &&
-    typeof cmsBlog.content.author === "object" &&
-    !Array.isArray(cmsBlog.content.author)
-      ? (cmsBlog.content.author as Record<string, unknown>)
-      : undefined;
-  const blog: ArticleView | undefined = cmsBlog
-    ? {
-        slug: cmsBlog.slug,
-        title: cmsBlog.title,
-        category: String(cmsBlog.content.category || fallbackBlog?.category || "Technology"),
-        date: String(cmsBlog.content.date || fallbackBlog?.date || ""),
-        readTime: String(cmsBlog.content.readTime || fallbackBlog?.readTime || ""),
-        img: String(
-          cmsBlog.content.img || cmsBlog.content.image || fallbackBlog?.img || "",
-        ),
-        images: Array.isArray(cmsBlog.content.images)
-          ? cmsBlog.content.images.map(String)
-          : fallbackBlog?.images || [],
-        description: String(cmsBlog.content.description || fallbackBlog?.description || ""),
-        author: {
-          name: String(cmsAuthor?.name || fallbackBlog?.author?.name || ""),
-          role: String(cmsAuthor?.role || fallbackBlog?.author?.role || ""),
-        },
-        content: Array.isArray(cmsBlog.content.content)
-          ? (cmsBlog.content.content as ArticleBlock[])
-          : fallbackBlog?.content || [],
-      }
-    : isCmsPending || isCmsError
-      ? (fallbackBlog as ArticleView | undefined)
-      : undefined;
+  const blog = cmsBlog ? toBlogArticle(cmsBlog) : undefined;
 
   if (!blog) {
     if (isCmsPending) {
@@ -260,8 +225,13 @@ const BlogDetail = () => {
       );
     }
     return (
-      <div className="min-h-screen bg-[#050816] flex items-center justify-center text-white text-3xl font-bold">
-        Blog Not Found
+      <div
+        role={isCmsError ? "alert" : "status"}
+        className="min-h-screen bg-[#050816] flex items-center justify-center px-6 text-center text-white text-xl font-bold"
+      >
+        {isCmsError
+          ? `Article content could not be loaded: ${cmsError.message}`
+          : "Blog Not Found"}
       </div>
     );
   }
@@ -321,7 +291,7 @@ const BlogDetail = () => {
                 </span>
                 <span className="text-white/30 text-xs">·</span>
                 <span className="text-white/50 text-xs flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> Trending
+                  <TrendingUp className="w-3 h-3" /> {pageText("trendingLabel")}
                 </span>
               </div>
 
@@ -400,7 +370,7 @@ const BlogDetail = () => {
                       >
                         <img
                           src={src}
-                          alt={`Article image ${block.index + 1}`}
+                          alt={`${pageText("articleImageAltPrefix")} ${(block.index ?? 0) + 1}`}
                           className="w-full h-full object-cover aspect-[4/3]"
                         />
                       </div>
@@ -437,13 +407,13 @@ const BlogDetail = () => {
                   </div>
                 </div>
                 <button className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 text-white/60 hover:border-cyan-400/40 hover:text-cyan-300 transition-all text-sm">
-                  <Share2 className="w-3.5 h-3.5" /> Share article
+                  <Share2 className="w-3.5 h-3.5" /> {pageText("shareArticleLabel")}
                 </button>
               </div>
             </motion.div>
 
             {/* Sidebar */}
-            <Sidebar blog={blog} toc={toc} />
+            <Sidebar blog={blog} toc={toc} pageText={pageText} />
 
           </div>
         </div>
